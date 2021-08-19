@@ -39,7 +39,7 @@ lazy val action = (project in file("action"))
   .settings(
     name := "beangle-web-action",
     commonSettings,
-    libraryDependencies ++= webDeps
+    libraryDependencies ++= (webDeps ++ Seq(commonsText,scalaxml))
   ).dependsOn(servlet)
 
 publish / skip := true

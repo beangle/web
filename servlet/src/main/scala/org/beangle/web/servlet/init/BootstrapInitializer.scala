@@ -18,14 +18,14 @@
 package org.beangle.web.servlet.init
 
 import jakarta.servlet.DispatcherType.REQUEST
-import jakarta.servlet.{ ServletContainerInitializer, ServletContext, ServletContextListener }
+import jakarta.servlet.{ServletContainerInitializer, ServletContext, ServletContextListener}
 import org.beangle.commons.io.IOs
 import org.beangle.commons.lang.ClassLoaders
-import org.beangle.commons.lang.Strings.{ split, substringAfter, substringBefore }
+import org.beangle.commons.lang.Strings.{split, substringAfter, substringBefore}
 import org.beangle.web.servlet.context.ServletContextHolder
 
+import java.util as ju
 import java.util.EnumSet
-import java.{ util => ju }
 
 object BootstrapInitializer {
   val InitFile = "META-INF/beangle/web-init.properties"
@@ -48,49 +48,50 @@ class BootstrapInitializer extends ServletContainerInitializer {
   }
 
   override def onStartup(clazzes: ju.Set[Class[_]], ctx: ServletContext): Unit = {
-    if (null != ServletContextHolder.context)
+    if (null != ServletContextHolder.context) {
       ctx.log("Bootstrap has executed,aborted")
-
-    ServletContextHolder.store(ctx)
-    val initializers = new ju.LinkedList[Initializer]
-    ClassLoaders.getResources(BootstrapInitializer.InitFile) foreach { url =>
-      IOs.readJavaProperties(url) get ("initializer") match {
-        case Some(clazz) => initializers.add(ClassLoaders.load(clazz).getDeclaredConstructor().newInstance().asInstanceOf[Initializer])
-        case None =>
+    } else {
+      ServletContextHolder.store(ctx)
+      val initializers = new ju.LinkedList[Initializer]
+      ClassLoaders.getResources(BootstrapInitializer.InitFile) foreach { url =>
+        IOs.readJavaProperties(url) get ("initializer") match {
+          case Some(clazz) => initializers.add(ClassLoaders.load(clazz).getDeclaredConstructor().newInstance().asInstanceOf[Initializer])
+          case None =>
+        }
       }
-    }
 
-    if (initializers.isEmpty)
-      ctx.log("None beangle initializer was detected on classpath.")
-    else {
-      import scala.jdk.CollectionConverters._
-      val inits = initializers.asScala
-      for (initializer <- inits) {
-        initializer.boss = this
-        ctx.log(s"${initializer.getClass.getName} initializing ...")
-        initializer.onConfig(ctx)
-      }
-      inits foreach (x => x.onStartup(ctx))
-      //process filter order
-      val filterOrders = ctx.getInitParameter("filter-orders")
-      if (null != filterOrders) {
-        val orders = split(filterOrders, ";")
-        orders foreach { order =>
-          val pattern = substringBefore(order, "=")
-          split(substringAfter(order, "="), ",") foreach { filterName =>
-            val fr = ctx.getFilterRegistration(filterName)
-            if (null == fr) sys.error(s"Cannot find filter $filterName")
-            fr.addMappingForUrlPatterns(EnumSet.of(REQUEST), true, pattern)
+      if (initializers.isEmpty)
+        ctx.log("None beangle initializer was detected on classpath.")
+      else {
+        import scala.jdk.CollectionConverters.*
+        val inits = initializers.asScala
+        for (initializer <- inits) {
+          initializer.boss = this
+          ctx.log(s"${initializer.getClass.getName} initializing ...")
+          initializer.onConfig(ctx)
+        }
+        inits foreach (x => x.onStartup(ctx))
+        //process filter order
+        val filterOrders = ctx.getInitParameter("filter-orders")
+        if (null != filterOrders) {
+          val orders = split(filterOrders, ";")
+          orders foreach { order =>
+            val pattern = substringBefore(order, "=")
+            split(substringAfter(order, "="), ",") foreach { filterName =>
+              val fr = ctx.getFilterRegistration(filterName)
+              if (null == fr) sys.error(s"Cannot find filter $filterName")
+              fr.addMappingForUrlPatterns(EnumSet.of(REQUEST), true, pattern)
+            }
           }
         }
+        if (register)
+          listeners foreach { l =>
+            ctx.addListener(l)
+          }
       }
-      if (register)
-        listeners foreach { l =>
-          ctx.addListener(l)
-        }
     }
   }
 
-  def addListener(other: ServletContextListener): Unit =
-    listeners += other
+  def addListener(other: ServletContextListener): Unit =  listeners += other
+
 }

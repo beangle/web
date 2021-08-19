@@ -20,7 +20,7 @@ package org.beangle.web.action.context
 import java.{util => ju}
 
 import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
-import org.beangle.web.action.i18n.TextProvider
+import org.beangle.commons.text.i18n.TextProvider
 
 object ActionContext {
   private val contexts = new ThreadLocal[ActionContext]

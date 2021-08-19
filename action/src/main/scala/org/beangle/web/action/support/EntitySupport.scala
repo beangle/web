@@ -102,13 +102,12 @@ trait EntitySupport[T] {
    */
   protected final def intIds(shortName: String): List[Int] = {
     ids(shortName, classOf[Int])
-
   }
 
   /**
    * Get entity's id array from parameters shortname.id,shortname.ids,shortnameIds
    */
-  protected final def ids[X: ClassTag](name: String, clazz: Class[X]): List[X] = {
+  protected final def ids[X](name: String, clazz: Class[X]): List[X] = {
     var datas: Iterable[X] = Params.getAll(name + ".id", clazz)
     if (datas.isEmpty) {
       datas =

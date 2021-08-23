@@ -24,7 +24,7 @@ object Os {
 
   val osMap = new mutable.HashMap[String, Os]
 
-  val UNKNOWN = new Os(Oss.Unknown, null)
+  val UNKNOWN = new Os(OsCategory.Unknown, null)
 
   /**
    * Parses user agent string and returns the best match. Returns Os.UNKNOWN
@@ -36,7 +36,7 @@ object Os {
   def parse(agentString: String): Os = {
     if (Strings.isEmpty(agentString)) return Os.UNKNOWN
 
-    val categoryItor = Oss.values.iterator
+    val categoryItor = OsCategory.values.iterator
     while (categoryItor.hasNext) {
       val category = categoryItor.next()
       val version = category.matches(agentString)
@@ -56,10 +56,10 @@ object Os {
 
 import Os._
 @SerialVersionUID(-7506270303767154240L)
-class Os private (val category: Oss.Category, val version: String) extends Serializable with Ordered[Os] {
+class Os private (val category: OsCategory, val version: String) extends Serializable with Ordered[Os] {
 
   override def toString(): String =
     category.name + " " + (if (version == null) "" else version)
 
-  def compare(o: Os): Int = category.compareTo(o.category)
+  def compare(o: Os): Int = category.ordinal - o.category.ordinal
 }

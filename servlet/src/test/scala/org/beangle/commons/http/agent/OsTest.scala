@@ -35,7 +35,7 @@ class OsTest extends AnyFunSpec with Matchers {
   describe("OS") {
     it("parse") {
       var os = Os.parse(windows(0))
-      os.category should equal(Oss.Windows)
+      os.category should equal(OsCategory.Windows)
       os.version should equal("98")
       os = Os.parse(windows(2))
       os.version should equal("XP")

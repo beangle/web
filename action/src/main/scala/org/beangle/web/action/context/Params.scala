@@ -61,7 +61,7 @@ object Params {
     }
   }
 
-  def getAll[T: ClassTag](attr: String, clazz: Class[T]): Iterable[T] = {
+  def getAll[T](attr: String, clazz: Class[T]): Iterable[T] = {
     val value = getAll(attr)
     if (value.isEmpty) {
       List.empty[T]

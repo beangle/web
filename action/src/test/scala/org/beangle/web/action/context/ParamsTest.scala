@@ -18,9 +18,12 @@
 package org.beangle.web.action.context
 
 import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
+import org.beangle.commons.lang.Strings
 import org.mockito.Mockito.mock
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.funspec.AnyFunSpec
+
+import scala.reflect.ClassTag
 
 class ParamsTest extends AnyFunSpec with Matchers {
 
@@ -37,6 +40,13 @@ class ParamsTest extends AnyFunSpec with Matchers {
       assert(Params.getInt("x").isEmpty)
       assert(Params.getInt("y").isEmpty)
       assert(Params.getInt("z").contains(1))
+
+      println(ids("1,2,3",classOf[Int]))
+      println(Long.MaxValue)
     }
+  }
+
+  def ids[T](str:String,clazz:Class[T]):List[T]={
+    Params.converter.convert(Strings.split(str, ","), clazz).toList
   }
 }

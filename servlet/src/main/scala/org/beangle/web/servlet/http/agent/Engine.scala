@@ -17,32 +17,24 @@
 
 package org.beangle.web.servlet.http.agent
 
-object Engines extends Enumeration {
+enum Engine(var name: String,var categories: List[BrowserCategory]=List.empty) {
 
-  val Trident = new Engine("Trident")
+  case Trident extends Engine("Trident")
 
-  val Gecko = new Engine("Gecko")
+  case Gecko extends Engine("Gecko")
 
-  val WebKit = new Engine("WebKit")
+  case WebKit extends Engine("WebKit")
 
-  val Presto = new Engine("Presto")
+  case Presto extends Engine("Presto")
 
-  val Mozilla = new Engine("Mozilla")
+  case Mozilla extends Engine("Mozilla")
 
-  val Khtml = new Engine("KHTML")
+  case Khtml extends Engine("KHTML")
 
-  val Word = new Engine("Microsoft Office Word")
+  case Word extends Engine("Microsoft Office Word")
 
-  val Other = new Engine("Other")
+  case Other extends Engine("Other")
 
-  class Engine(var name: String) extends Val {
-
-    var categories: List[Browsers.Category] = Nil
-
-    def addCategory(category: Browsers.Category): Unit =
-      categories = categories ::: List(category)
-  }
-
-  import scala.language.implicitConversions
-  implicit def convertValue(v: Value): Engine = v.asInstanceOf[Engine]
+  def addCategory(category: BrowserCategory): Unit =
+    categories = categories ::: List(category)
 }

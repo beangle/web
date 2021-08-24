@@ -23,14 +23,14 @@ import org.beangle.web.action.context.{ActionContext, Flash}
 
 trait MessageSupport {
 
-  final def getText(aTextName: String): String = {
+  protected final def getText(aTextName: String): String = {
     ActionContext.current.textProvider match {
       case Some(p) => p(aTextName).get
       case None => aTextName
     }
   }
 
-  final def getText(key: String, defaultValue: String, args: Any*): String = {
+  protected final def getText(key: String, defaultValue: String, args: Any*): String = {
     ActionContext.current.textProvider match {
       case Some(p) => p(key, defaultValue, args: _*)
       case None => defaultValue

@@ -24,7 +24,7 @@ object Browser {
 
   var browsers = new mutable.HashMap[String, Browser]
 
-  val Unknown = new Browser(Browsers.Unknown, null)
+  val Unknown = new Browser(BrowserCategory.Unknown, null)
 
   /**
    * Iterates over all Browsers to compare the browser signature with the user
@@ -36,7 +36,7 @@ object Browser {
   def parse(agentString: String): Browser = {
     if (Strings.isEmpty(agentString)) return Browser.Unknown
 
-    val engineItor = Engines.values.iterator
+    val engineItor = Engine.values.iterator
     while (engineItor.hasNext) {
       val engine = engineItor.next()
       val engineName = engine.name
@@ -58,7 +58,7 @@ object Browser {
       }
     }
 
-    val categoryItor = Browsers.values.iterator
+    val categoryItor = BrowserCategory.values.iterator
     while (categoryItor.hasNext) {
       val category = categoryItor.next()
       val version = category.matches(agentString)
@@ -83,10 +83,10 @@ import Browser._
  * @author chaostone
  */
 @SerialVersionUID(-6200607575108416928L)
-class Browser(val category: Browsers.Category, val version: String) extends Serializable with Ordered[Browser] {
+class Browser(val category: BrowserCategory, val version: String) extends Serializable with Ordered[Browser] {
 
   override def toString(): String =
     category.name + " " + (if (version == null) "" else version)
 
-  def compare(o: Browser): Int = category.compareTo(o.category)
+  def compare(o: Browser): Int = category.ordinal - o.category.ordinal
 }

@@ -39,8 +39,7 @@ trait OncePerRequestInterceptor extends Interceptor {
     if (count.increment() == 1) doPreInvoke(request, response) else true
   }
 
-  def doPreInvoke(request: HttpServletRequest, response: HttpServletResponse): Boolean =
-    true
+  def doPreInvoke(request: HttpServletRequest, response: HttpServletResponse): Boolean =  true
 
   def doPostInvoke(request: HttpServletRequest, response: HttpServletResponse): Unit = {
 

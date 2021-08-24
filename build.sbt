@@ -1,5 +1,5 @@
-import Dependencies._
-import BuildSettings._
+import org.beangle.parent.Dependencies._
+import org.beangle.parent.Settings._
 import sbt.url
 
 ThisBuild / organization := "org.beangle.web"
@@ -24,6 +24,11 @@ ThisBuild / developers := List(
 ThisBuild / description := "The Beangle Web Library"
 ThisBuild / homepage := Some(url("http://beangle.github.io/web/index.html"))
 
+val beangle_commons_core = "org.beangle.commons" %% "beangle-commons-core" % "5.2.5"
+val beangle_commons_text = "org.beangle.commons" %% "beangle-commons-text" % "5.2.5"
+val webDeps = Seq(beangle_commons_core, logback_classic, logback_core, scalatest, servletapi, mockito)
+
+
 lazy val root = (project in file("."))
   .settings()
   .aggregate(servlet,action)
@@ -31,15 +36,15 @@ lazy val root = (project in file("."))
 lazy val servlet = (project in file("servlet"))
   .settings(
     name := "beangle-web-servlet",
-    commonSettings,
-    libraryDependencies ++= (webDeps)
+    common,
+    libraryDependencies ++= webDeps
   )
 
 lazy val action = (project in file("action"))
   .settings(
     name := "beangle-web-action",
-    commonSettings,
-    libraryDependencies ++= (webDeps ++ Seq(commonsText,scalaxml))
+    common,
+    libraryDependencies ++= (webDeps ++ Seq(beangle_commons_text,scalaxml))
   ).dependsOn(servlet)
 
 publish / skip := true

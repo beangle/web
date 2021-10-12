@@ -3,7 +3,7 @@ import org.beangle.parent.Settings._
 import sbt.url
 
 ThisBuild / organization := "org.beangle.web"
-ThisBuild / version := "0.0.1"
+ThisBuild / version := "0.0.2"
 
 ThisBuild / scmInfo := Some(
   ScmInfo(
@@ -24,8 +24,8 @@ ThisBuild / developers := List(
 ThisBuild / description := "The Beangle Web Library"
 ThisBuild / homepage := Some(url("http://beangle.github.io/web/index.html"))
 
-val beangle_commons_core = "org.beangle.commons" %% "beangle-commons-core" % "5.2.5"
-val beangle_commons_text = "org.beangle.commons" %% "beangle-commons-text" % "5.2.5"
+val beangle_commons_core = "org.beangle.commons" %% "beangle-commons-core" % "5.2.6"
+val beangle_commons_text = "org.beangle.commons" %% "beangle-commons-text" % "5.2.6"
 val webDeps = Seq(beangle_commons_core, logback_classic, logback_core, scalatest, servletapi, mockito)
 
 

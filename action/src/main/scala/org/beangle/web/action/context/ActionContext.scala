@@ -17,10 +17,13 @@
 
 package org.beangle.web.action.context
 
-import java.{util => ju}
-
 import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 import org.beangle.commons.text.i18n.TextProvider
+import org.beangle.web.action.context.ActionContext.{FlashKey, LocalKey, TextProviderKey}
+import org.beangle.web.action.execution.Handler
+
+import java.util as ju
+import scala.collection.mutable
 
 object ActionContext {
   private val contexts = new ThreadLocal[ActionContext]
@@ -30,15 +33,15 @@ object ActionContext {
   }
 
   def current: ActionContext = contexts.get()
+
+  private val LocalKey = "_beangle_web_local"
+  private val FlashKey = "_beangle_web_flash"
+  private val TextProviderKey = "_beangle_web_text_provider"
 }
 
-final class ActionContext(val request: HttpServletRequest, val response: HttpServletResponse, val locale: ju.Locale, val params: Map[String, Any]) {
+final class ActionContext(val request: HttpServletRequest, val response: HttpServletResponse, val handler: Handler, val params: collection.Map[String, Any]) {
 
-  var textProvider: Option[TextProvider] = None
-
-  val flash = new Flash(request, response)
-
-  private val stash = new collection.mutable.HashMap[String, Any]
+  private val stash = new mutable.HashMap[String, Any]
 
   def attribute(name: String, value: Any): Unit = {
     request.setAttribute(name, value)
@@ -60,6 +63,44 @@ final class ActionContext(val request: HttpServletRequest, val response: HttpSer
 
   def stash[T](name: String): T = {
     stash.get(name).orNull.asInstanceOf[T]
+  }
+
+  def locale: ju.Locale = {
+    stash.get(LocalKey) match {
+      case Some(l) => l.asInstanceOf[ju.Locale]
+      case None => request.getLocale
+    }
+  }
+
+  def locale_=(locale: ju.Locale): Unit = {
+    stash.put(LocalKey, locale)
+  }
+
+  def textProvider: TextProvider = {
+    stash.get(TextProviderKey) match {
+      case Some(l) => l.asInstanceOf[TextProvider]
+      case None => TextProvider.Empty
+    }
+  }
+
+  def textProvider_=(textProvider: TextProvider): Unit = {
+    stash.put(TextProviderKey, textProvider)
+  }
+
+  def getFlash(createWhenMissing: Boolean): Flash = {
+    stash.get(FlashKey) match {
+      case f@Some(_) => f.asInstanceOf[Flash]
+      case None =>
+        if createWhenMissing then
+          val f = new Flash(request, response)
+          stash.put(FlashKey, f)
+          f
+        else null
+    }
+  }
+
+  def clearFlash(): Unit = {
+    stash.remove(FlashKey)
   }
 
 }

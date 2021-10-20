@@ -80,7 +80,6 @@ enum OsCategory(val name: String, versions: String*) {
 
   case Unknown extends OsCategory("Unknown")
 
-
   def matches(agentString: String): String = {
     val entryItor = versionPairs.iterator
     while (entryItor.hasNext) {

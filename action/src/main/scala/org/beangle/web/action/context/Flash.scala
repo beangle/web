@@ -17,16 +17,13 @@
 
 package org.beangle.web.action.context
 
-import java.{util => ju}
-
 import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 import org.beangle.commons.lang.Strings
 import org.beangle.web.servlet.util.CookieUtils
 
-object Flash {
+import java.util as ju
 
-  val MessagesKey = "messages"
-  val ErrorsKey = "errors"
+object Flash {
   private val CookieName = "beangle_flash"
 }
 
@@ -97,54 +94,14 @@ class Flash(request: HttpServletRequest, response: HttpServletResponse) extends 
     now.clear()
   }
 
-  import Flash._
-
-  /**
-   * 添加消息到下一次请求
-   */
-  def addMessage(message: String): Unit = {
-    updateMessages(next, MessagesKey, message)
+  def append(key: String, content: String): Unit = {
+    val exist = next.get(key)
+    next.put(key, if (null == exist) content else exist + ";" + content)
   }
 
-  /**
-   * 添加错误消息到下一次请求
-   */
-  def addError(error: String): Unit = {
-    updateMessages(next, ErrorsKey, error)
+  def appendNow(key: String, content: String): Unit = {
+    val exist = now.get(key)
+    now.put(key, if (null == exist) content else exist + ";" + content)
   }
 
-  /**
-   * 添加消息到本次请求
-   */
-  def addMessageNow(message: String): Unit = {
-    updateMessages(now, MessagesKey, message)
-  }
-
-  /**
-   * 添加错误到本次请求
-   */
-  def addErrorNow(message: String): Unit = {
-    updateMessages(now, ErrorsKey, message)
-  }
-
-  def messages: List[String] = {
-    val m = now.get(MessagesKey)
-    if (null == m) List.empty
-    else {
-      Strings.split(m, ';').toList
-    }
-  }
-
-  def errors: List[String] = {
-    val m = now.get(ErrorsKey)
-    if (null == m) List.empty
-    else {
-      Strings.split(m, ';').toList
-    }
-  }
-
-  private def updateMessages(map: ju.Map[String, String], key: String, content: String): Unit = {
-    val exist = map.get(key)
-    map.put(key, if (null == exist) content else exist + ";" + content)
-  }
 }

@@ -77,12 +77,13 @@ trait MessageSupport {
   protected final def actionErrors: List[String] = getFlashMsgs(ErrorsKey)
 
   private def getFlashMsgs(key: String): List[String] = {
-    val flash = ActionContext.current.getFlash(false)
+    val flash = ActionContext.current.getFlash(true)
     if null == flash then
       List.empty
     else
-      val messages = flash.get(key)
-      if (null == messages) List()
-      else Strings.split(messages, ';').toList
+      flash.get(key) match {
+        case Some(mgs) => Strings.split(mgs, ';').toList
+        case None => List.empty
+      }
   }
 }

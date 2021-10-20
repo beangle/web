@@ -22,6 +22,7 @@ import org.beangle.commons.lang.Strings
 import org.beangle.web.servlet.util.CookieUtils
 
 import java.util as ju
+import scala.collection.mutable
 
 object Flash {
   private val CookieName = "beangle_flash"
@@ -33,12 +34,12 @@ class Flash(request: HttpServletRequest, response: HttpServletResponse) extends 
   /**
    * current request
    */
-  val now: ju.Map[String, String] = new ju.HashMap()
+  private val now = new mutable.HashMap[String, String]
 
   /**
    * next request
    */
-  private val next: ju.Map[String, String] = new ju.HashMap()
+  private val next = new mutable.HashMap[String, String]
 
   moveCookieToNow()
 
@@ -57,10 +58,10 @@ class Flash(request: HttpServletRequest, response: HttpServletResponse) extends 
   def writeNextToCookie(): Unit = {
     if (next.isEmpty) return
     val sb = new StringBuilder
-    val i = next.entrySet().iterator()
+    val i = next.iterator
     while (i.hasNext) {
       val e = i.next()
-      val kv = e.getKey + "=" + e.getValue
+      val kv = e._1 + "=" + e._2
       sb.append(kv).append(",")
     }
     if (sb.nonEmpty) {
@@ -71,23 +72,23 @@ class Flash(request: HttpServletRequest, response: HttpServletResponse) extends 
     }
   }
 
-  def get(key: Object): String = now.get(key)
+  def get(key: String): Option[String] = now.get(key)
 
   def put(key: String, value: String): String = {
     next.put(key, value)
     value
   }
 
-  def putAll(values: ju.Map[_ <: String, _ <: String]): Unit = {
-    next.putAll(values)
+  def putAll(values: collection.Map[String, String]): Unit = {
+    next.addAll(values)
   }
 
   def keep(key: String): Unit = {
-    next.put(key, now.get(key))
+    now.get(key) foreach (v => next.put(key, v))
   }
 
   def keep(): Unit = {
-    next.putAll(now)
+    next.addAll(now)
   }
 
   def clear(): Unit = {
@@ -95,13 +96,17 @@ class Flash(request: HttpServletRequest, response: HttpServletResponse) extends 
   }
 
   def append(key: String, content: String): Unit = {
-    val exist = next.get(key)
-    next.put(key, if (null == exist) content else exist + ";" + content)
+    next.get(key) match {
+      case Some(c) => next.put(key, c + ";" + content)
+      case None => next.put(key, content)
+    }
   }
 
   def appendNow(key: String, content: String): Unit = {
-    val exist = now.get(key)
-    now.put(key, if (null == exist) content else exist + ";" + content)
+    now.get(key) match {
+      case Some(c) => now.put(key, c + ";" + content)
+      case None => now.put(key, content)
+    }
   }
 
 }

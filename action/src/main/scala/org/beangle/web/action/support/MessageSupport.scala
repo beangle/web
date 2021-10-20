@@ -20,21 +20,21 @@ package org.beangle.web.action.support
 import org.beangle.commons.lang.{Chars, Strings}
 import org.beangle.web.action.annotation.ignore
 import org.beangle.web.action.context.{ActionContext, Flash}
+import org.beangle.web.action.support.MessageSupport.{ErrorsKey, MessagesKey}
+
+object MessageSupport {
+  val MessagesKey = "messages"
+  val ErrorsKey = "errors"
+}
 
 trait MessageSupport {
 
   protected final def getText(aTextName: String): String = {
-    ActionContext.current.textProvider match {
-      case Some(p) => p(aTextName).get
-      case None => aTextName
-    }
+    ActionContext.current.textProvider.apply(aTextName, aTextName)
   }
 
   protected final def getText(key: String, defaultValue: String, args: Any*): String = {
-    ActionContext.current.textProvider match {
-      case Some(p) => p(key, defaultValue, args: _*)
-      case None => defaultValue
-    }
+    ActionContext.current.textProvider.apply(key, defaultValue, args: _*)
   }
 
   protected final def getTextInternal(msgKey: String, args: Any*): String = {
@@ -50,38 +50,39 @@ trait MessageSupport {
   }
 
   protected final def addMessage(msgKey: String, args: Any*): Unit = {
-    ActionContext.current.flash.addMessageNow(getTextInternal(msgKey, args: _*))
+    ActionContext.current.getFlash(true).appendNow(MessagesKey, getTextInternal(msgKey, args: _*))
   }
 
   protected final def addError(msgKey: String, args: Any*): Unit = {
-    ActionContext.current.flash.addErrorNow(getTextInternal(msgKey, args: _*))
+    ActionContext.current.getFlash(true).appendNow(ErrorsKey, getTextInternal(msgKey, args: _*))
   }
 
   protected final def addFlashError(msgKey: String, args: Any*): Unit = {
-    ActionContext.current.flash.addError(getTextInternal(msgKey, args: _*))
+    ActionContext.current.getFlash(true).append(ErrorsKey, getTextInternal(msgKey, args: _*))
   }
 
   protected final def addFlashMessage(msgKey: String, args: Any*): Unit = {
-    ActionContext.current.flash.addMessage(getTextInternal(msgKey, args: _*))
+    ActionContext.current.getFlash(true).append(MessagesKey, getTextInternal(msgKey, args: _*))
   }
 
   /** 获得action消息
    */
   @ignore
-  protected final def actionMessages: List[String] = {
-    val messages = ActionContext.current.flash.get(Flash.MessagesKey)
-    if (null == messages) List()
-    else Strings.split(messages, ';').toList
-  }
+  protected final def actionMessages: List[String] = getFlashMsgs(MessagesKey)
 
   /**
    * 获得aciton错误消息<br>
    */
   @ignore
-  protected final def actionErrors: List[String] = {
-    val messages = ActionContext.current.flash.get(Flash.ErrorsKey)
-    if (null == messages) List()
-    else Strings.split(messages, ';').toList
-  }
+  protected final def actionErrors: List[String] = getFlashMsgs(ErrorsKey)
 
+  private def getFlashMsgs(key: String): List[String] = {
+    val flash = ActionContext.current.getFlash(false)
+    if null == flash then
+      List.empty
+    else
+      val messages = flash.get(key)
+      if (null == messages) List()
+      else Strings.split(messages, ';').toList
+  }
 }

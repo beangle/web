@@ -89,7 +89,7 @@ final class ActionContext(val request: HttpServletRequest, val response: HttpSer
 
   def getFlash(createWhenMissing: Boolean): Flash = {
     stash.get(FlashKey) match {
-      case f@Some(_) => f.asInstanceOf[Flash]
+      case Some(f) => f.asInstanceOf[Flash]
       case None =>
         if createWhenMissing then
           val f = new Flash(request, response)

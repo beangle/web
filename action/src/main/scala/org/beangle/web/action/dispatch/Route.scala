@@ -20,7 +20,7 @@ package org.beangle.web.action.dispatch
 import org.beangle.commons.net.http.HttpMethods
 import org.beangle.web.action.execution.Handler
 
-class Route(val httpMethod: String, val url: String, val handler: Handler) {
+case class Route(httpMethod: String, url: String, handler: Handler) {
 
   def this(url: String, handler: Handler) = {
     this(HttpMethods.GET, url, handler)

@@ -32,7 +32,7 @@ object Resources {
     } else {
       var is = url.openStream()
       if (null == is) {
-        import scala.jdk.javaapi.CollectionConverters.*
+        import scala.jdk.javaapi.CollectionConverters.asScala
         val subPaths = asScala(ctx.getResourcePaths(path))
         subPaths.find(_.contains("/index.htm")) foreach { subIndex =>
           url = ctx.getResource(subIndex)

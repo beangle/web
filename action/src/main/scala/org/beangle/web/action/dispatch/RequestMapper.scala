@@ -17,12 +17,13 @@
 
 package org.beangle.web.action.dispatch
 
-import org.beangle.commons.net.http.HttpMethods
-import org.beangle.web.action.execution.Handler
+import jakarta.servlet.http.HttpServletRequest
+import org.beangle.commons.lang.annotation.spi
 
-case class Route(httpMethod: String, url: String, handler: Handler) {
+@spi
+trait RequestMapper {
 
-  def this(url: String, handler: Handler) = {
-    this(HttpMethods.GET, url, handler)
-  }
+  def resolve(uri: String, request: HttpServletRequest): Option[HandlerHolder]
+
+  def resolve(uri: String): Option[HandlerHolder]
 }

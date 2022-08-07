@@ -17,30 +17,24 @@
 
 package org.beangle.web.action.support
 
-import scala.reflect.ClassTag
 import org.beangle.commons.lang.Strings
-import org.beangle.commons.lang.reflect.Reflections
-import org.beangle.web.action.context.Params
-import org.beangle.web.action.annotation.ignore
 import org.beangle.commons.lang.annotation.noreflect
+import org.beangle.commons.lang.reflect.Reflections
+import org.beangle.web.action.annotation.ignore
+import org.beangle.web.action.context.Params
 
 trait EntitySupport[T] {
 
   @noreflect
-  val entityType: Class[T] = {
+  val entityClass: Class[T] = {
     val tClass = Reflections.getGenericParamTypes(getClass, classOf[EntitySupport[_]]).get("T")
     if (tClass.isEmpty) throw new RuntimeException(s"Cannot guess entity type from ${this.getClass.getName}")
     else tClass.get.asInstanceOf[Class[T]]
   }
 
   @ignore
-  protected final def entityName: String = {
-    entityType.getName
-  }
-
-  @ignore
   protected def simpleEntityName: String = {
-    Strings.uncapitalize(Strings.substringAfterLast(entityName, "."))
+    Strings.uncapitalize(Strings.substringAfterLast(entityClass.getName, "."))
   }
 
   protected def getId(name: String): Option[String] = {
@@ -63,7 +57,7 @@ trait EntitySupport[T] {
   protected def id(name: String): String = {
     getId(name) match {
       case Some(id) => id
-      case None     => throw new RuntimeException(s"Cannot find $name.id or ${name}_id or ${name}Id parameter")
+      case None => throw new RuntimeException(s"Cannot find $name.id or ${name}_id or ${name}Id parameter")
     }
   }
 
@@ -73,7 +67,7 @@ trait EntitySupport[T] {
   protected final def getId[E](name: String, clazz: Class[E]): Option[E] = {
     getId(name) match {
       case Some(id) => Params.converter.convert(id, clazz)
-      case None     => None
+      case None => None
     }
   }
 

@@ -26,7 +26,7 @@ import org.beangle.web.action.context.Params
 trait EntitySupport[T] {
 
   @noreflect
-  protected val entityClass: Class[T] = {
+  val entityClass: Class[T] = {
     val tClass = Reflections.getGenericParamTypes(getClass, classOf[EntitySupport[_]]).get("T")
     if (tClass.isEmpty) throw new RuntimeException(s"Cannot guess entity type from ${this.getClass.getName}")
     else tClass.get.asInstanceOf[Class[T]]

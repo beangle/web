@@ -44,7 +44,7 @@ class StaticResourceServlet extends HttpServlet {
 
   protected def buildProcessor(): Unit =
     if (null == processor) {
-      val p = new ResourceProcessor(new ClasspathResourceLoader, new PathResolverImpl())
+      val p = new ResourceProcessor(new ClasspathResourceLoader)
       p.filters = List(new HeaderFilter)
       processor = p
     }

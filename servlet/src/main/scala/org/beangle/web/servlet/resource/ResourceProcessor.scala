@@ -23,12 +23,12 @@ import org.beangle.commons.lang.Strings.substringAfterLast
 
 import jakarta.servlet.http.{ HttpServletRequest, HttpServletResponse }
 
-class ResourceProcessor(private val loader: ResourceLoader, private val resolver: PathResolver) {
+class ResourceProcessor(private val loader: ResourceLoader) {
 
   var filters: List[ResourceFilter] = List.empty
 
   def process(uri: String, request: HttpServletRequest, response: HttpServletResponse): Unit = {
-    val names = resolver.resolve(uri)
+    val names = PathResolver.resolve(uri)
     val resources = loader.load(names)
     if (resources.size != names.size)
       response.sendError(HttpServletResponse.SC_NOT_FOUND)

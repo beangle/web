@@ -17,11 +17,13 @@
 
 package org.beangle.web.servlet.resource.impl
 
-import org.beangle.web.servlet.resource.PathResolver
-import org.beangle.commons.lang.Strings
 import org.beangle.commons.collection.Collections
+import org.beangle.commons.lang.Strings
+import org.beangle.web.servlet.resource.PathResolver
+
 import scala.collection.mutable.ListBuffer
 
+@Deprecated("since 0.1.1", true)
 class PathResolverImpl extends PathResolver {
   override def resolve(path: String): List[String] = {
     val lastPostfix = "." + Strings.substringAfterLast(path, ".")

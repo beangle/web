@@ -15,18 +15,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.beangle.web.servlet.resource.impl
+package org.beangle.web.servlet.resource
 
-import org.scalatest.matchers.should.Matchers
 import org.scalatest.funspec.AnyFunSpec
+import org.scalatest.matchers.should.Matchers
 
-class PathResolverImplTest extends AnyFunSpec with Matchers {
-  describe("PathResolverImpl") {
+class PathResolverTest extends AnyFunSpec with Matchers {
+  describe("PathResolver") {
     it("resolve") {
-      val resolver = new PathResolverImpl
-      val res = resolver.resolve("/static/scripts/jquery/jquery,beangle.js")
+      val res = PathResolver.resolve("/static/scripts/jquery/jquery,beangle.js")
       assert(res.size == 2)
-      assert(res == List("static/scripts/jquery/jquery.js", "static/scripts/jquery/beangle.js"))
+      assert(res == List("/static/scripts/jquery/jquery.js", "/static/scripts/jquery/beangle.js"))
+
+      val res2 = PathResolver.resolve("/static/scripts/jquery/jquery,beangle")
+      assert(res2.size == 2)
+      assert(res2 == List("/static/scripts/jquery/jquery", "/static/scripts/jquery/beangle"))
+
+      val res3 = PathResolver.resolve("jquery,beangle")
+      assert(res3.size == 2)
+      assert(res3 == List("jquery", "beangle"))
     }
   }
 }

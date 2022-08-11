@@ -19,7 +19,7 @@ package org.beangle.web.servlet.resource
 
 import java.net.URL
 
-class ProcessContext(val uri: String, paths: List[String], urls: List[URL]) {
+class ProcessContext(val uri: String, paths: Seq[String], urls: Seq[URL]) {
 
   val resources: List[Resource] = {
     val resources = new collection.mutable.ArrayBuffer[Resource]

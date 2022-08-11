@@ -42,7 +42,7 @@ class StaticResourceRouteProvider extends RouteProvider with Initializing {
 
   def init(): Unit = {
     if (null == processor) {
-      processor = new ResourceProcessor(new ClasspathResourceLoader, new PathResolverImpl())
+      processor = new ResourceProcessor(new ClasspathResourceLoader)
       processor.filters = List(new HeaderFilter)
     }
     handler = new StaticResourceHandler(processor)

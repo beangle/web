@@ -31,23 +31,28 @@ trait ServletSupport {
   @ignore
   protected final def response: HttpServletResponse = ActionContext.current.response
 
+  @deprecated("Using CookieUtils directly","0.1.2")
   protected final def getCookieValue(cookieName: String): String = {
     CookieUtils.getCookieValue(request, cookieName)
   }
 
+  @deprecated("Using CookieUtils directly","0.1.2")
   protected final def addCookie(name: String, value: String, path: String, age: Int): Unit = {
     CookieUtils.addCookie(request, response, name, value, path, age)
   }
 
+  @deprecated("Using CookieUtils directly","0.1.2")
   protected final def addCookie(name: String, value: String, age: Int): Unit = {
     CookieUtils.addCookie(request, response, name, value, age)
   }
 
+  @deprecated("Using CookieUtils directly","0.1.2")
   protected final def deleteCookie(name: String): Unit = {
     CookieUtils.deleteCookieByName(request, response, name)
   }
 
   @ignore
+  @deprecated("Using RequestUtils directly","0.1.2")
   protected def remoteAddr: String = RequestUtils.getIpAddr(request)
 
 }

@@ -17,36 +17,24 @@
 
 package org.beangle.web.servlet.util
 
-import java.net.{ URLDecoder, URLEncoder }
+import jakarta.servlet.http.{Cookie, HttpServletRequest, HttpServletResponse}
 
-import jakarta.servlet.http.{ Cookie, HttpServletRequest, HttpServletResponse }
+import java.net.{URLDecoder, URLEncoder}
 
 object CookieUtils {
 
   private val Encoding = "utf-8"
-  private val EndingSlash = "/"
 
-  def getCookieValue(cookie: Cookie): String =
-    try
-      URLDecoder.decode(cookie.getValue, Encoding)
-    catch {
-      case _: Exception => null
-    }
+  def getCookieValue(cookie: Cookie): String = decode(cookie.getValue)
 
   /**
    * 获取cookie中的value<br>
    * 自动负责解码<br>
    */
-  def getCookieValue(request: HttpServletRequest, cookieName: String): String =
-    try {
-      val cookie = getCookie(request, cookieName)
-      if (null == cookie)
-        null
-      else
-        URLDecoder.decode(cookie.getValue, Encoding)
-    } catch {
-      case _: Exception => null
-    }
+  def getCookieValue(request: HttpServletRequest, cookieName: String): String = {
+    val cookie = getCookie(request, cookieName)
+    if null == cookie then null else decode(cookie.getValue)
+  }
 
   /**
    * Convenience method to get a cookie by name
@@ -72,13 +60,10 @@ object CookieUtils {
    * 刚方法自动将value进行编码存储
    */
   def addCookie(request: HttpServletRequest, response: HttpServletResponse,
-    name: String, value: String, path: String, age: Int): Unit = {
+                name: String, value: String, path: String, age: Int): Unit = {
     val cookie = new Cookie(name, URLEncoder.encode(value, Encoding))
     cookie.setSecure(RequestUtils.isHttps(request))
-    if (path.endsWith(EndingSlash))
-      cookie.setPath(path)
-    else
-      cookie.setPath(path + EndingSlash)
+    cookie.setPath(path)
     cookie.setMaxAge(age)
     cookie.setHttpOnly(true)
     response.addCookie(cookie)
@@ -88,13 +73,13 @@ object CookieUtils {
    * 默认按照应用上下文进行设置
    */
   def addCookie(request: HttpServletRequest, response: HttpServletResponse,
-    name: String, value: String, age: Int): Unit = {
-    val path = getDefaultCookiePath(request)
+                name: String, value: String, age: Int): Unit = {
+    val path = getPath(request)
     addCookie(request, response, name, value, path, age)
   }
 
   def deleteCookieByName(request: HttpServletRequest, response: HttpServletResponse, name: String): Boolean = {
-    val path = getDefaultCookiePath(request)
+    val path = getPath(request)
     deleteCookie(response, getCookie(request, name), path)
   }
 
@@ -102,14 +87,14 @@ object CookieUtils {
    * Convenience method for deleting a cookie by name
    *
    */
-  def deleteCookie(response: HttpServletResponse, cookie: Cookie, path: String): Boolean =
-    if (cookie != null) {
+  def deleteCookie(response: HttpServletResponse, cookie: Cookie, path: String): Boolean = {
+    if cookie == null then false
+    else
       cookie.setMaxAge(0)
       cookie.setPath(path)
       response.addCookie(cookie)
       true
-    } else
-      false
+  }
 
   /**
    * Clean all session cookies
@@ -120,7 +105,7 @@ object CookieUtils {
   def clearSession(request: HttpServletRequest, response: HttpServletResponse): Unit = {
     val cookies = request.getCookies
     if (cookies != null) {
-      val contextPath = getDefaultCookiePath(request)
+      val contextPath = getPath(request)
       var i = 0
       while (i < cookies.length) {
         val c = cookies(i)
@@ -134,6 +119,14 @@ object CookieUtils {
     }
   }
 
-  private def getDefaultCookiePath(request: HttpServletRequest): String =
-    if (!request.getContextPath.endsWith(EndingSlash)) request.getContextPath + EndingSlash else request.getContextPath
+  def getPath(request: HttpServletRequest): String = {
+    if (request.getContextPath.length == 0) "/" else request.getContextPath
+  }
+
+  private def decode(cookieValue: String): String = {
+    try URLDecoder.decode(cookieValue, Encoding)
+    catch {
+      case _: Exception => null
+    }
+  }
 }

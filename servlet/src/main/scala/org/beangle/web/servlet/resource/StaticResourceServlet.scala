@@ -20,7 +20,6 @@ package org.beangle.web.servlet.resource
 import org.beangle.commons.io.ClasspathResourceLoader
 import org.beangle.commons.lang.Strings
 import org.beangle.web.servlet.resource.filter.HeaderFilter
-import org.beangle.web.servlet.resource.impl.PathResolverImpl
 
 import jakarta.servlet.ServletConfig
 import jakarta.servlet.http.{ HttpServlet, HttpServletRequest, HttpServletResponse }

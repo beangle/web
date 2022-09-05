@@ -26,7 +26,6 @@ import org.beangle.web.action.dispatch.{Route, RouteProvider}
 import org.beangle.web.action.execution.Handler
 import org.beangle.web.servlet.resource.ResourceProcessor
 import org.beangle.web.servlet.resource.filter.HeaderFilter
-import org.beangle.web.servlet.resource.impl.PathResolverImpl
 
 /**
  * @author chaostone
@@ -37,7 +36,7 @@ class StaticResourceRouteProvider extends RouteProvider with Initializing {
   private var handler: StaticResourceHandler = _
 
   def routes: Iterable[Route] = {
-    patterns.map(pattern => new Route(GET, pattern, handler)).toList
+    patterns.map(pattern => Route(GET, pattern, handler)).toList
   }
 
   def init(): Unit = {

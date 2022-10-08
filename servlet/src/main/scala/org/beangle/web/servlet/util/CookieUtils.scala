@@ -62,11 +62,12 @@ object CookieUtils {
   def addCookie(request: HttpServletRequest, response: HttpServletResponse,
                 name: String, value: String, path: String, age: Int): Unit = {
     val cookie = new Cookie(name, URLEncoder.encode(value, Encoding))
-    cookie.setSecure(RequestUtils.isHttps(request))
+    val secure = RequestUtils.isHttps(request)
+    cookie.setSecure(secure)
     cookie.setPath(path)
     cookie.setMaxAge(age)
     cookie.setHttpOnly(true)
-    cookie.setAttribute("SameSite","None")
+    if secure then cookie.setAttribute("SameSite", "None")
     response.addCookie(cookie)
   }
 

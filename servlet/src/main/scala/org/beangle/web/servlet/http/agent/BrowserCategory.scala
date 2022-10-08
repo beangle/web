@@ -122,16 +122,19 @@ enum BrowserCategory(val name: String, val engine: Engine, versions: String*) {
   }
 
   def matches(agentString: String): String = {
-    for (pair <- versionPairs) {
+    var matched: String = null
+    val pairIter = versionPairs.iterator
+    while (pairIter.hasNext && matched == null) {
+      val pair = pairIter.next()
       val m = pair._1.matcher(agentString)
       if (m.find()) {
         val sb = new StringBuffer()
         m.appendReplacement(sb, pair._2)
         sb.delete(0, m.start())
-        return sb.toString
+        matched = sb.toString
       }
     }
-    null
+    matched
   }
 
 }

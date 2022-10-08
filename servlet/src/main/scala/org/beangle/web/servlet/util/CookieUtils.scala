@@ -66,6 +66,7 @@ object CookieUtils {
     cookie.setPath(path)
     cookie.setMaxAge(age)
     cookie.setHttpOnly(true)
+    cookie.setAttribute("SameSite","None")
     response.addCookie(cookie)
   }
 

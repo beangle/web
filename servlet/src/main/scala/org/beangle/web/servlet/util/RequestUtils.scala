@@ -17,14 +17,14 @@
 
 package org.beangle.web.servlet.util
 
-import java.net.URLEncoder
 import jakarta.servlet.ServletContext
-import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 import org.beangle.commons.codec.net.BCoder
-import org.beangle.web.servlet.http.agent._
-import org.beangle.commons.lang.Strings
-import jakarta.servlet.http.HttpServletResponse
 import org.beangle.commons.collection.Collections
+import org.beangle.commons.lang.Strings
+import org.beangle.web.servlet.http.agent.*
+
+import java.net.URLEncoder
 
 object RequestUtils {
 
@@ -34,6 +34,7 @@ object RequestUtils {
    * <li>First,it lookup request header("x-forwarded-for"->"Proxy-Client-IP"->"WL-Proxy-Client-IP")
    * <li>Second,invoke request.getRemoteAddr()
    * </ul>
+   *
    * @param request
    */
   def getIpAddr(request: HttpServletRequest): String = {
@@ -53,6 +54,7 @@ object RequestUtils {
     } else
       List.empty
   }
+
   /**
    * Return the true servlet path.
    * When servletPath provided by container is empty,It will return requestURI-contextpath'
@@ -73,22 +75,22 @@ object RequestUtils {
       if (length > 2) {
         if ('/' == context.charAt(length - 1)) context = context.substring(0, length - 1)
         servletPath = uri.substring(context.length)
-        servletPath
         val semicolonIdx = servletPath.indexOf(';')
-        if (semicolonIdx > 0)
-          servletPath.substring(0, semicolonIdx)
-        else { servletPath }
+        if semicolonIdx > 0 then servletPath.substring(0, semicolonIdx) else servletPath
       } else {
         val semicolonIdx = uri.indexOf(';')
         if (semicolonIdx > 0)
           uri.substring(0, semicolonIdx)
-        else { uri }
+        else {
+          uri
+        }
       }
     }
   }
 
   /**
    * Set Content-Disposition header
+   *
    * @see http://tools.ietf.org/html/rfc6266
    * @see http://tools.ietf.org/html/rfc5987
    * @see https://blog.robotshell.org/2012/deal-with-http-header-encoding-for-file-download/

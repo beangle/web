@@ -95,7 +95,6 @@ object RequestUtils {
    */
   def setContentDisposition(response: HttpServletResponse, attachName: String): Unit = {
     val value = new StringBuilder("attachment;")
-    value ++= " filename=\"" + attachName + "\";"
     value ++= " filename*=utf-8''" + URLEncoder.encode(attachName, "UTF-8").replaceAll("\\+", "%20")
     response.setHeader("Content-Disposition", value.mkString)
   }

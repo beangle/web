@@ -24,8 +24,8 @@ ThisBuild / developers := List(
 ThisBuild / description := "The Beangle Web Library"
 ThisBuild / homepage := Some(url("http://beangle.github.io/web/index.html"))
 
-val beangle_commons_core = "org.beangle.commons" %% "beangle-commons-core" % "5.4.1"
-val beangle_commons_text = "org.beangle.commons" %% "beangle-commons-text" % "5.4.1"
+val beangle_commons_core = "org.beangle.commons" %% "beangle-commons-core" % "5.4.2"
+val beangle_commons_text = "org.beangle.commons" %% "beangle-commons-text" % "5.4.2"
 val webDeps = Seq(beangle_commons_core, logback_classic, logback_core, scalatest, servletapi, mockito)
 
 

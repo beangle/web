@@ -122,7 +122,7 @@ object RequestUtils {
       Integer.parseInt(headPort)
   }
 
-  def isAjax(req: HttpServletRequest): Boolean = {
+  def isAjax(request: HttpServletRequest): Boolean = {
     val headers = request.getHeaders("x-requested-with")
     while (headers.hasMoreElements) {
       val header = headers.nextElement()

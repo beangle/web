@@ -38,9 +38,7 @@ enum OsCategory(val name: String, versions: String*) {
     "Windows NT 5->XP", "Win98->98", "Windows 98->98", "Windows Phone OS 7->Mobile 7", "Windows CE->Mobile",
     "Windows")
 
-  case Android extends OsCategory("Android", "Android-4->4.x", "Android 4->4.x", "Xoom->4.x Tablet", "Transformer->4.x Tablet",
-    "Android 3->3.x Tablet", "Android 2->2.x", "Kindle Fire->2.x Tablet", "GT-P1000->2.x Tablet", "SCH-I800->2.x Tablet",
-    "Android 1->1.x", "GoogleTV->(Google TV)", "Android")
+  case Android extends OsCategory("Android", "Android ([\\d.]*)->$1", "GoogleTV->(Google TV)", "Android")
 
   case Linux extends OsCategory("Linux", "Fedora/(\\S*)\\.fc(\\S*)->Fedora fc$2", "Ubuntu/(\\S*)->Ubuntu $1",
     "Fedora", "Ubuntu", "Linux", "CamelHttpStream")

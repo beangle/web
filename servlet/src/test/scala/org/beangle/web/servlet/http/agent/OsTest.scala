@@ -30,6 +30,8 @@ class OsTest extends AnyFunSpec with Matchers {
 
   val linux = Array("Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2.12) Gecko/20101027 Fedora/3.6.12-1.fc14 Firefox/3.6.12")
 
+  val android = "Mozilla/5.0 (Linux; Android 10; Redmi K20 "
+
   val blackberry = Array("Mozilla/5.0 (BB10; <Device Model>) AppleWebKit/537.10+ (KHTML, like Gecko) Version/10.0.9.1675 Mobile Safari/537.10+", "Mozilla/5.0 (PlayBook; U; RIM Tablet OS 2.0.0; en-US) AppleWebKit/535.8+ (KHTML, like Gecko) Version/7.2.0.0 Safari/535.8+", "Mozilla/5.0 (BlackBerry; U; BlackBerry AAAA; en-US) AppleWebKit/534.11+ (KHTML, like Gecko) Version/6.0.0.141 Mobile Safari/534.11+")
 
   describe("OS") {
@@ -47,8 +49,12 @@ class OsTest extends AnyFunSpec with Matchers {
       os.version should equal("7.2.0.0")
       os = Os.parse(blackberry(2))
       os.version should equal("6.0.0.141")
+
       os = Os.parse(linux(0))
       os.version should equal("Fedora fc14")
+
+      os = Os.parse(android)
+      os.version should equal("10")
     }
   }
 }

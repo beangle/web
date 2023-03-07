@@ -17,12 +17,12 @@
 
 package org.beangle.web.action.context
 
-import java.time.{Instant, LocalDate, LocalDateTime}
-
 import org.beangle.commons.collection.MapConverter
 import org.beangle.commons.conversion.impl.DefaultConversion
+import org.beangle.commons.lang.Strings
 import org.beangle.commons.lang.Strings.join
 
+import java.time.{Instant, LocalDate, LocalDateTime}
 import scala.collection.Map
 import scala.reflect.ClassTag
 
@@ -74,6 +74,10 @@ object Params {
     converter.getBoolean(ActionContext.current.params, name)
   }
 
+  def getBoolean(name: String, defaultValue: Boolean): Boolean = {
+    converter.getBoolean(ActionContext.current.params, name).getOrElse(defaultValue)
+  }
+
   def getDate(name: String): Option[LocalDate] = {
     converter.getDate(ActionContext.current.params, name)
   }
@@ -97,13 +101,70 @@ object Params {
     converter.getShort(ActionContext.current.params, name)
   }
 
+  def getShort(name: String, defaultValue: Short): Short = {
+    converter.getShort(ActionContext.current.params, name).getOrElse(defaultValue)
+  }
+
   def getInt(name: String): Option[Int] = {
     converter.getInt(ActionContext.current.params, name)
+  }
+
+  def getInt(name: String, defaultValue: Int): Int = {
+    converter.getInt(ActionContext.current.params, name).getOrElse(defaultValue)
   }
 
   def getLong(name: String): Option[Long] = {
     converter.getLong(ActionContext.current.params, name)
   }
+
+  def getLong(name: String, defaultValue: Long): Long = {
+    converter.getLong(ActionContext.current.params, name).getOrElse(defaultValue)
+  }
+
+  def getId(name: String): Option[String] = {
+    var ids = Params.getAll(name + ".id")
+    if ids.isEmpty then ids = Params.getAll(name + "Id")
+    if ids.isEmpty then ids = Params.getAll(name + "_id")
+    if ids.isEmpty then ids = Params.getAll("id")
+
+    if ids.isEmpty || ids.size > 1 then None
+    else
+      val head = ids.head.toString
+      if (Strings.isBlank(head)) None else Some(head)
+  }
+
+  def getId[E](name: String, clazz: Class[E]): Option[E] = {
+    getId(name) match {
+      case Some(id) => Params.converter.convert(id, clazz)
+      case None => None
+    }
+  }
+
+  def getIntId(shortName: String): Int = Params.getId(shortName, classOf[Int]).get
+
+  def getLongId(shortName: String): Long = Params.getId(shortName, classOf[Long]).get
+
+  def getIds(name: String): List[String] = {
+    val datas = getAll(name + ".id").asInstanceOf[List[String]]
+    if (datas.isEmpty) {
+      get(name + ".ids").orElse(get(name + "Ids")) match {
+        case None => List.empty[String]
+        case Some(datastring) => Strings.split(datastring, ",").toList
+      }
+    } else datas
+  }
+
+  def getIds[X](name: String, clazz: Class[X]): List[X] = {
+    val datas = getAll(name + ".id", clazz).asInstanceOf[List[X]]
+    if (datas.isEmpty) {
+      get(name + ".ids").orElse(get(name + "Ids")) match {
+        case None => List.empty[X]
+        case Some(datastring) => converter.convert(Strings.split(datastring, ","), clazz).toList
+      }
+    } else datas
+  }
+
+  def getLongIds(shortName: String): List[Long] = Params.getIds(shortName, classOf[Long])
 
   def sub(prefix: String): Map[String, Any] = converter.sub(ActionContext.current.params, prefix)
 

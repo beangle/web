@@ -17,8 +17,8 @@
 
 package org.beangle.web.servlet.http.agent
 
-import org.scalatest.matchers.should.Matchers
 import org.scalatest.funspec.AnyFunSpec
+import org.scalatest.matchers.should.Matchers
 
 class BrowserTest extends AnyFunSpec with Matchers {
 
@@ -37,6 +37,10 @@ class BrowserTest extends AnyFunSpec with Matchers {
   val maxthon = Array("Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.1 (KHTML, like Gecko) Maxthon/4.0.3.1000 Chrome/22.0.1229.79 Safari/537.1")
 
   val theworld = Array("Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0; EasyBits GO v1.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; qihu theworld)")
+
+  val wechat = Array("Mozilla/5.0 (Linux; Android 11; Redmi K20 Pro Premium Edition Build/RKQ1.200826.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/86.0.4240.99 XWEB/4425 MMWEBSDK/20230202 Mobile Safari/537.36 MMWEBID/4784 MicroMessenger/8.0.33.2320(0x2800213B) WeChat")
+
+  val alipay = Array("mozilla/5.0 (iphone; cpu iphone os 10_3_3 like mac os x) AppleWebKit/603.3.8 (khtml, like gecko) mobile/14g60 nebula psdtype(1) alipaydefined(nt:wifi,ws:375|603|2.0) aliapp(ap/10.1.8.112317) AlipayClient/10.1.8.112317 alipay language/zh-hans")
 
   val validator = Array("Total Validator")
 
@@ -70,6 +74,13 @@ class BrowserTest extends AnyFunSpec with Matchers {
       browser.category should equal(BrowserCategory.Sogo)
       browser = Browser.parse(theworld(0))
       browser.category should equal(BrowserCategory.TheWorld)
+
+      browser = Browser.parse(wechat(0))
+      browser.category should equal(BrowserCategory.WeChat)
+
+      browser = Browser.parse(alipay(0))
+      browser.category should equal(BrowserCategory.AliPay)
+      browser.version should be ("10.1.8.112317")
     }
   }
 }

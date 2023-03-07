@@ -121,4 +121,8 @@ object RequestUtils {
     else
       Integer.parseInt(headPort)
   }
+
+  def isAjax(req: HttpServletRequest): Boolean = {
+    false
+  }
 }

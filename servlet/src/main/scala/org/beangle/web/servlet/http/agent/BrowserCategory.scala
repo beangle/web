@@ -23,6 +23,10 @@ import org.beangle.web.servlet.http.agent.Engine.*
 
 import java.util.regex.{Matcher, Pattern}
 
+/**
+ * 浏览器种类
+ * 不要轻易改变这里的顺序
+ */
 enum BrowserCategory(val name: String, val engine: Engine, versions: String*) {
   private val versionPairs = build(versions)
 
@@ -52,6 +56,12 @@ enum BrowserCategory(val name: String, val engine: Engine, versions: String*) {
 
   case OutlookExpress extends BrowserCategory("Windows Live Mail", Trident, "Outlook-Express/7.0->7.0")
 
+  case Edge extends BrowserCategory("Edge", WebKit, "Edg/(\\S*)->$1", "Edg")
+
+  case WeChat extends BrowserCategory("WeChat", WebKit, "MicroMessenger/([\\d.]*)->$1")
+
+  case AliPay extends BrowserCategory("AliPay", WebKit, "AlipayClient/([\\d.]*)->$1")
+
   case Maxthon extends BrowserCategory("Maxthon", WebKit, "Maxthon/(\\S*)->$1", "Maxthon")
 
   case Chrome extends BrowserCategory("Chrome", WebKit, "Chrome/(\\S*)->$1", "Chrome")
@@ -71,7 +81,7 @@ enum BrowserCategory(val name: String, val engine: Engine, versions: String*) {
 
   case Dolfin extends BrowserCategory("Samsung Dolphin", WebKit, "Dolfin/(\\S*)->$1")
 
-  case Opera extends BrowserCategory("Opera", Presto, "Opera/(.*?)Version/(\\S*)->$2", "Opera Mini->Mini",
+  case Opera extends BrowserCategory("Opera", WebKit, "Opera/(.*?)Version/(\\S*)->$2", "Opera Mini->Mini",
     "Opera")
 
   case Konqueror extends BrowserCategory("Konqueror", Khtml, "Konqueror")

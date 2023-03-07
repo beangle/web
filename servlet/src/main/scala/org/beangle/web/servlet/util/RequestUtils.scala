@@ -123,6 +123,11 @@ object RequestUtils {
   }
 
   def isAjax(req: HttpServletRequest): Boolean = {
+    val headers = request.getHeaders("x-requested-with")
+    while (headers.hasMoreElements) {
+      val header = headers.nextElement()
+      if (header == "XMLHttpRequest") return true
+    }
     false
   }
 }

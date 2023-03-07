@@ -17,10 +17,9 @@
 
 package org.beangle.web.action.support
 
-import java.time.{Instant, LocalDate, LocalDateTime}
-
 import org.beangle.web.action.context.{ActionContext, Params}
 
+import java.time.{Instant, LocalDate, LocalDateTime}
 import scala.reflect.ClassTag
 
 trait ParamSupport {
@@ -97,4 +96,22 @@ trait ParamSupport {
   protected final def getLong(name: String): Option[Long] = {
     Params.getLong(name)
   }
+
+
+  def getId(name: String): Option[String] = Params.getId(name)
+
+  def getId[E](name: String, clazz: Class[E]): Option[E] = Params.getId(name, clazz)
+
+  def getIntId(shortName: String): Int = Params.getIntId(shortName)
+
+  def getLongId(shortName: String): Long = Params.getLongId(shortName)
+
+  def getIds(name: String): List[String] = Params.getIds(name)
+
+  def getIds[X](name: String, clazz: Class[X]): List[X] = Params.getIds(name, clazz)
+
+  def getLongIds(shortName: String): List[Long] = Params.getLongIds(shortName)
+
+  def getIntIds(shortName: String): List[Int] = Params.getIntIds(shortName)
+
 }

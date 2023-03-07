@@ -166,6 +166,8 @@ object Params {
 
   def getLongIds(shortName: String): List[Long] = Params.getIds(shortName, classOf[Long])
 
+  def getIntIds(shortName: String): List[Int] = Params.getIds(shortName, classOf[Int])
+
   def sub(prefix: String): Map[String, Any] = converter.sub(ActionContext.current.params, prefix)
 
   def sub(prefix: String, exclusiveAttrNames: String): Map[String, Any] = {

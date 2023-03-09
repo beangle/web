@@ -32,11 +32,9 @@ class BrowserTest extends AnyFunSpec with Matchers {
 
   val opera = Array("Opera/9.80 (X11; Linux x86_64; U; bg) Presto/2.8.131 Version/11.10", "Opera/9.80 (Windows NT 5.2; U; zh-cn) Presto/2.6.30 Version/10.63", "Opera/12.80 (Windows NT 5.1; U; en) Presto/2.10.289 Version/12.02")
 
-  val sogo = Array("Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; Trident/4.0; EasyBits GO v1.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; SE 2.X MetaSr 1.0)")
+  val sogo = Array("Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.84 Safari/535.11 SE 2.X MetaSr 1.0")
 
   val maxthon = Array("Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.1 (KHTML, like Gecko) Maxthon/4.0.3.1000 Chrome/22.0.1229.79 Safari/537.1")
-
-  val theworld = Array("Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0; EasyBits GO v1.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; qihu theworld)")
 
   val wechat = Array("Mozilla/5.0 (Linux; Android 11; Redmi K20 Pro Premium Edition Build/RKQ1.200826.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/86.0.4240.99 XWEB/4425 MMWEBSDK/20230202 Mobile Safari/537.36 MMWEBID/4784 MicroMessenger/8.0.33.2320(0x2800213B) WeChat")
 
@@ -72,8 +70,6 @@ class BrowserTest extends AnyFunSpec with Matchers {
       browser.category should equal(BrowserCategory.Maxthon)
       browser = Browser.parse(sogo(0))
       browser.category should equal(BrowserCategory.Sogo)
-      browser = Browser.parse(theworld(0))
-      browser.category should equal(BrowserCategory.TheWorld)
 
       browser = Browser.parse(wechat(0))
       browser.category should equal(BrowserCategory.WeChat)

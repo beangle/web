@@ -43,38 +43,13 @@ enum OsCategory(val name: String, versions: String*) {
   case Linux extends OsCategory("Linux", "Fedora/(\\S*)\\.fc(\\S*)->Fedora fc$2", "Ubuntu/(\\S*)->Ubuntu $1",
     "Fedora", "Ubuntu", "Linux", "CamelHttpStream")
 
-  case Webos extends OsCategory("WebOS", "webOS")
-
-  case Palm extends OsCategory("PalmOS", "Palm")
-
   case Ios extends OsCategory("iOS", "iPhone OS(\\S*)->$1 (iPhone)", "like Mac OS X", "iOS")
 
   case MacOs extends OsCategory("Mac OS", "iPad->(iPad)", "iPhone->(iPhone)", "iPod->(iPod)", "Mac OS X->X",
     "CFNetwork->X", "Mac")
 
-  case Maemo extends OsCategory("Maemo", "Maemo")
-
-  case Bada extends OsCategory("Bada", "Bada")
-
-  case Kindle extends OsCategory("Kindle", "Kindle/(\\S*)->(Kindle $1)", "Kindle")
-
-  case Symbian extends OsCategory("Symbian OS", "SymbianOS/(\\S*)->$1", "Series60/3->9.x", "Series60/2.6->8.x",
-    "Series60/2.8->8.x", "Symbian", "Series60")
-
-  case Series40 extends OsCategory("Series 40", "Nokia6300")
-
-  case SonyEricsson extends OsCategory("Sony Ericsson", "SonyEricsson")
-
-  case SunOs extends OsCategory("SunOS", "SunOS")
-
-  case Psp extends OsCategory("Sony Playstation", "Playstation")
-
-  case Wii extends OsCategory("Nintendo Wii", "Wii")
-
   case BlackBerry extends OsCategory("BlackBerryOS", "(BB|BlackBerry|PlayBook)(.*?)Version/(\\S*)->$3",
     "BlackBerry")
-
-  case Roku extends OsCategory("Roku OS", "Roku")
 
   case Unknown extends OsCategory("Unknown")
 

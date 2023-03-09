@@ -34,27 +34,13 @@ enum BrowserCategory(val name: String, val engine: Engine, versions: String*) {
 
   case Thunderbird extends BrowserCategory("Thunderbird", Gecko, "Thunderbird/(\\S*)->$1", "Thunderbird")
 
-  case Camino extends BrowserCategory("Camino", Gecko, "Camino/(\\S*)->$1", "Camino")
-
-  case Flock extends BrowserCategory("Flock", Gecko, "Flock/(\\S*)->$1")
-
   case FirefoxMobile extends BrowserCategory("Firefox Mobile", Gecko, "Firefox/3.5 Maemo->3")
 
   case SeaMonkey extends BrowserCategory("SeaMonkey", Gecko, "SeaMonkey")
 
-  case Tencent extends BrowserCategory("Tencent Traveler", Trident, "TencentTraveler (\\S*);->$1")
-
-  case Sogo extends BrowserCategory("Sogo", Trident, "SE(.*)MetaSr")
-
-  case TheWorld extends BrowserCategory("The World", Trident, "theworld")
-
   case IE360 extends BrowserCategory("Internet Explorer 360", Trident, "360SE")
 
-  case IeMobile extends BrowserCategory("IE Mobile", Trident, "IEMobile (\\S*)->$1")
-
   case IE extends BrowserCategory("Internet Explorer", Trident, "MSIE (\\S*);->$1", "MSIE")
-
-  case OutlookExpress extends BrowserCategory("Windows Live Mail", Trident, "Outlook-Express/7.0->7.0")
 
   case Edge extends BrowserCategory("Edge", WebKit, "Edg/(\\S*)->$1", "Edg")
 
@@ -62,13 +48,15 @@ enum BrowserCategory(val name: String, val engine: Engine, versions: String*) {
 
   case AliPay extends BrowserCategory("AliPay", WebKit, "AlipayClient/([\\d.]*)->$1")
 
+  case Sogo extends BrowserCategory("Sogo", WebKit, "SE(.*)MetaSr")
+
   case Maxthon extends BrowserCategory("Maxthon", WebKit, "Maxthon/(\\S*)->$1", "Maxthon")
+
+  case UC extends BrowserCategory("UC", WebKit, "UBrowser/([\\d.]*)->$1")
 
   case Chrome extends BrowserCategory("Chrome", WebKit, "Chrome/(\\S*)->$1", "Chrome")
 
   case Safari extends BrowserCategory("Safari", WebKit, "Version/(\\S*) Safari->$1", "Safari")
-
-  case Omniweb extends BrowserCategory("Omniweb", WebKit, "OmniWeb")
 
   case AppleMail extends BrowserCategory("Apple Mail", WebKit, "AppleWebKit")
 
@@ -77,39 +65,17 @@ enum BrowserCategory(val name: String, val engine: Engine, versions: String*) {
   case SafariMobile extends BrowserCategory("Mobile Safari", WebKit, "Mobile Safari", "Mobile/5A347 Safari",
     "Mobile/3A101a Safari", "Mobile/7B367 Safari")
 
-  case Silk extends BrowserCategory("Silk", WebKit, "Silk/(\\S*)->$1")
+  case Opera extends BrowserCategory("Opera", WebKit, "Opera/(.*?)Version/(\\S*)->$2", "Opera Mini->Mini", "Opera")
 
-  case Dolfin extends BrowserCategory("Samsung Dolphin", WebKit, "Dolfin/(\\S*)->$1")
-
-  case Opera extends BrowserCategory("Opera", WebKit, "Opera/(.*?)Version/(\\S*)->$2", "Opera Mini->Mini",
-    "Opera")
+  case QQ extends BrowserCategory("QQ", WebKit, "QQBrowser/([\\d.]*)->$1")
 
   case Konqueror extends BrowserCategory("Konqueror", Khtml, "Konqueror")
 
   case Outlook extends BrowserCategory("Outlook", Word, "MSOffice 12->2007", "MSOffice 14->2010", "MSOffice")
 
-  case LotusNotes extends BrowserCategory("Lotus Notes", Other, "Lotus-Notes")
-
-  case Bot extends BrowserCategory("Robot/Spider", Other, "Googlebot", "bot", "spider", "crawler", "Feedfetcher",
-    "Slurp", "Twiceler", "Nutch", "BecomeBot")
-
   case Mozilla extends BrowserCategory("Mozilla", Other, "Mozilla", "Moozilla")
 
-  case CFNetwork extends BrowserCategory("CFNetwork", Other, "CFNetwork")
-
-  case Eudora extends BrowserCategory("Eudora", Other, "Eudora", "EUDORA")
-
-  case PocoMail extends BrowserCategory("PocoMail", Other, "PocoMail")
-
-  case TheBat extends BrowserCategory("The Bat!", Other, "The Bat")
-
-  case NetFront extends BrowserCategory("NetFront", Other, "NetFront")
-
-  case Evolution extends BrowserCategory("Evolution", Other, "CamelHttpStream")
-
   case Lynx extends BrowserCategory("Lynx", Other, "Lynx")
-
-  case UC extends BrowserCategory("UC", Other, "UCWEB")
 
   case Download extends BrowserCategory("Downloading Tool", Other, "cURL", "wget")
 

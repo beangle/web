@@ -82,4 +82,10 @@ object Stream {
 
 class StreamView(val inputStream: InputStream, val contentType: String, val displayName: String, val lastModified: Option[Long]) extends View {
 
+  var postHook: Option[() => Unit] = None
+
+  def cleanup(f: () => Unit): StreamView = {
+    postHook = Some(f)
+    this
+  }
 }

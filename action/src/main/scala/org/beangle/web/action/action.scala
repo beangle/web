@@ -17,9 +17,9 @@
 
 package org.beangle.web.action
 
-import java.net.URLEncoder
-
 import org.beangle.commons.lang.Strings
+
+import java.net.URLEncoder
 
 object To {
   def apply(clazz: Class[_], method: String = "index"): ToClass = {
@@ -39,14 +39,52 @@ object To {
   }
 
   def apply(uri: String, params: String): ToURI = {
-    val index = uri.indexOf('?')
-    val tp = if (-1 == index) new ToURI(uri) else new ToURI(uri.substring(0, index)).params(uri.substring(index + 1))
-    tp.params(params)
+    val idx = indexOfURI(uri)
+    val rs = ToURI(idx.uri)
+    rs.suffix(idx.suffix)
+    rs.params(params)
+    rs.params(idx.queryString)
   }
 
   def apply(url: String): To = {
     require(url.startsWith("http:") || url.startsWith("https:"))
     new ToURL(url)
+  }
+
+  /**
+   * Return uri end index and query start index
+   */
+  def indexOfURI(url: String): URLIndex = {
+    val lastIndex = url.length
+    val chars = new Array[Char](lastIndex)
+    url.getChars(0, lastIndex, chars, 0)
+    var i = 0
+    var endIdx = lastIndex
+    var queryIdx = -1
+    while (i < lastIndex) {
+      val c = chars(i)
+      if (c == '.') endIdx = i
+      if (c == '?') {
+        if (endIdx == lastIndex) endIdx = i
+        queryIdx = i
+      }
+      i += 1
+    }
+    URLIndex(url, endIdx, queryIdx)
+  }
+
+  case class URLIndex(url: String, uriEnd: Int, queryStart: Int) {
+    def suffix: String = {
+      if queryStart > uriEnd then url.substring(uriEnd, queryStart) else null
+    }
+
+    def queryString: String = {
+      if queryStart > 0 then url.substring(queryStart + 1) else null
+    }
+
+    def uri: String = {
+      if url.length == uriEnd then url else url.substring(0, uriEnd)
+    }
   }
 }
 

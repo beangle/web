@@ -97,7 +97,6 @@ trait ParamSupport {
     Params.getLong(name)
   }
 
-
   def getId(name: String): Option[String] = Params.getId(name)
 
   def getId[E](name: String, clazz: Class[E]): Option[E] = Params.getId(name, clazz)

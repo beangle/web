@@ -30,14 +30,19 @@ class ToTest extends AnyFunSpec with Matchers {
       assert(touri.uri == "/a/b/c")
       assert(touri.parameters.size == 2)
 
-      touri = To("/a/b/c?p1=1", null)
-      assert(touri.suffix == null)
-      assert(touri.uri == "/a/b/c")
+      touri = To("/a/b.c/d.xml?p1=1", null)
+      assert(touri.suffix == ".xml")
+      assert(touri.uri == "/a/b.c/d")
       assert(touri.parameters.size == 1)
 
-      touri = To("!info?id=12", null)
+      touri = To("!info?orderBy=user.code", null)
       assert(touri.suffix == null)
       assert(touri.uri == "!info")
+      assert(touri.parameters.size == 1)
+
+      touri = To("a.b/c?p1=1", null)
+      assert(touri.suffix == null)
+      assert(touri.uri == "a.b/c")
       assert(touri.parameters.size == 1)
     }
   }

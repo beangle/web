@@ -54,23 +54,21 @@ object To {
   /**
    * Return uri end index and query start index
    */
-  def indexOfURI(url: String): URLIndex = {
-    val lastIndex = url.length
-    val chars = new Array[Char](lastIndex)
-    url.getChars(0, lastIndex, chars, 0)
-    var i = 0
-    var endIdx = lastIndex
-    var queryIdx = -1
-    while (i < lastIndex) {
-      val c = chars(i)
-      if (c == '.') endIdx = i
-      if (c == '?') {
-        if (endIdx == lastIndex) endIdx = i
-        queryIdx = i
-      }
-      i += 1
-    }
+  private def indexOfURI(url: String): URLIndex = {
+    val queryIdx = url.indexOf('?')
+    val endIdx =
+      if queryIdx == -1 then uriEndIndex(url)
+      else uriEndIndex(url.substring(0, queryIdx))
     URLIndex(url, endIdx, queryIdx)
+  }
+
+  private def uriEndIndex(url: String): Int = {
+    val dotIdx = url.lastIndexOf('.')
+    if dotIdx == -1 then
+      url.length
+    else
+      val slashIdx = url.lastIndexOf('/')
+      if dotIdx < slashIdx then url.length else dotIdx
   }
 
   case class URLIndex(url: String, uriEnd: Int, queryStart: Int) {

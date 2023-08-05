@@ -21,7 +21,12 @@ import org.beangle.web.action.To
 
 trait View {}
 
-case  class PathView(path: String) extends View
+case class PathView(path: String) extends View
+
 class ActionView(val to: To) extends View
+
 class ForwardActionView(to: To) extends ActionView(to)
+
 class RedirectActionView(to: To) extends ActionView(to)
+
+case class RawView(data: Any) extends View

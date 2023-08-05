@@ -18,5 +18,10 @@
 package org.beangle.web.action.support
 
 import org.beangle.commons.logging.Logging
+import org.beangle.web.action.view.RawView
 
-abstract class ActionSupport extends RouteSupport with ParamSupport with Logging
+abstract class ActionSupport extends RouteSupport with ParamSupport with Logging {
+  protected def raw(data: Any): RawView = {
+    RawView(data)
+  }
+}

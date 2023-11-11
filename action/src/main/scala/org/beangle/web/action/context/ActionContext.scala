@@ -18,8 +18,8 @@
 package org.beangle.web.action.context
 
 import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
-import org.beangle.commons.text.i18n.TextProvider
-import org.beangle.web.action.context.ActionContext.{FlashKey, LocalKey, TextProviderKey}
+import org.beangle.commons.text.i18n.TextResource
+import org.beangle.web.action.context.ActionContext.{FlashKey, LocalKey, TextResourceKey}
 import org.beangle.web.action.execution.Handler
 
 import java.util as ju
@@ -36,7 +36,7 @@ object ActionContext {
 
   private val LocalKey = "_beangle_web_local"
   private val FlashKey = "_beangle_web_flash"
-  private val TextProviderKey = "_beangle_web_text_provider"
+  private val TextResourceKey = "_beangle_web_text_resource"
 }
 
 final class ActionContext(val request: HttpServletRequest, val response: HttpServletResponse, val handler: Handler, val params: collection.Map[String, Any]) {
@@ -76,15 +76,15 @@ final class ActionContext(val request: HttpServletRequest, val response: HttpSer
     stash.put(LocalKey, locale)
   }
 
-  def textProvider: TextProvider = {
-    stash.get(TextProviderKey) match {
-      case Some(l) => l.asInstanceOf[TextProvider]
-      case None => TextProvider.Empty
+  def textResource: TextResource = {
+    stash.get(TextResourceKey) match {
+      case Some(l) => l.asInstanceOf[TextResource]
+      case None => TextResource.Empty
     }
   }
 
-  def textProvider_=(textProvider: TextProvider): Unit = {
-    stash.put(TextProviderKey, textProvider)
+  def textResource_=(textResource: TextResource): Unit = {
+    stash.put(TextResourceKey, textResource)
   }
 
   def getFlash(createWhenMissing: Boolean): Flash = {

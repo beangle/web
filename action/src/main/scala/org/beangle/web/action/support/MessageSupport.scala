@@ -30,11 +30,11 @@ object MessageSupport {
 trait MessageSupport {
 
   protected final def getText(aTextName: String): String = {
-    ActionContext.current.textProvider.apply(aTextName, aTextName)
+    ActionContext.current.textResource.apply(aTextName, aTextName)
   }
 
   protected final def getText(key: String, defaultValue: String, args: Any*): String = {
-    ActionContext.current.textProvider.apply(key, defaultValue, args: _*)
+    ActionContext.current.textResource.apply(key, defaultValue, args: _*)
   }
 
   protected final def getTextInternal(msgKey: String, args: Any*): String = {

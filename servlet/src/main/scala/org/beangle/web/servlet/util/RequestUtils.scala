@@ -21,7 +21,7 @@ import jakarta.servlet.ServletContext
 import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 import org.beangle.commons.codec.net.BCoder
 import org.beangle.commons.collection.Collections
-import org.beangle.commons.lang.Strings
+import org.beangle.commons.lang.{Charsets, Strings}
 import org.beangle.web.servlet.http.agent.*
 
 import java.net.URLEncoder
@@ -97,7 +97,7 @@ object RequestUtils {
    */
   def setContentDisposition(response: HttpServletResponse, attachName: String): Unit = {
     val value = new StringBuilder("attachment;")
-    value ++= " filename*=utf-8''" + URLEncoder.encode(attachName, "UTF-8").replaceAll("\\+", "%20")
+    value ++= " filename*=utf-8''" + URLEncoder.encode(attachName, Charsets.UTF_8).replaceAll("\\+", "%20")
     response.setHeader("Content-Disposition", value.mkString)
   }
 

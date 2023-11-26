@@ -18,9 +18,14 @@
 package org.beangle.web.servlet.url
 
 import jakarta.servlet.http.HttpServletRequest
+import org.beangle.commons.lang.Charsets
 import org.beangle.web.servlet.util.RequestUtils
 
+import java.net.URLEncoder
+
 object UrlBuilder {
+  val separator = "&"
+
   def apply(req: HttpServletRequest): UrlBuilder = {
     val builder = new UrlBuilder(req.getContextPath)
     val scheme = if (RequestUtils.isHttps(req)) "https" else "http"
@@ -30,8 +35,21 @@ object UrlBuilder {
     builder
   }
 
-  def url(req: HttpServletRequest): String =
+  def url(req: HttpServletRequest): String = {
     apply(req).buildUrl()
+  }
+
+  def encodeParams(params: collection.Map[String, String]): String = {
+    val sb = new StringBuilder()
+    for ((key, value) <- params) {
+      sb.append(URLEncoder.encode(key, Charsets.UTF_8))
+        .append('=')
+        .append(URLEncoder.encode(value, Charsets.UTF_8))
+        .append(separator)
+    }
+    sb.delete(sb.length - separator.length, sb.length)
+    sb.toString()
+  }
 }
 
 /**

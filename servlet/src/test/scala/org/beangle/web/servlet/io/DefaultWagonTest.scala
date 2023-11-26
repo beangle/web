@@ -17,18 +17,16 @@
 
 package org.beangle.web.servlet.io
 
-import java.io.{ ByteArrayOutputStream, OutputStream }
-import java.net.{ URLDecoder, URLEncoder }
-
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.servlet.{ServletOutputStream, WriteListener}
 import org.beangle.commons.codec.net.BCoder
-import org.beangle.commons.lang.ClassLoaders
-
-import org.mockito.Mockito.{ mock, when }
-import org.scalatest.matchers.should.Matchers
+import org.beangle.commons.lang.{Charsets, ClassLoaders}
+import org.mockito.Mockito.{mock, when}
 import org.scalatest.funspec.AnyFunSpec
+import org.scalatest.matchers.should.Matchers
 
-import jakarta.servlet.{ ServletOutputStream, WriteListener }
-import jakarta.servlet.http.{ HttpServletRequest, HttpServletResponse }
+import java.io.{ByteArrayOutputStream, OutputStream}
+import java.net.{URLDecoder, URLEncoder}
 
 class DefaultWagonTest extends AnyFunSpec with Matchers {
 
@@ -55,8 +53,8 @@ class DefaultWagonTest extends AnyFunSpec with Matchers {
 
     it("encode/decode") {
       val value = "汉字-english and .;"
-      val ecodedValue = URLEncoder.encode(value, "utf-8")
-      URLDecoder.decode(ecodedValue, "utf-8") should equal(value)
+      val ecodedValue = URLEncoder.encode(value, Charsets.UTF_8)
+      URLDecoder.decode(ecodedValue, Charsets.UTF_8) should equal(value)
     }
 
     it("Bcoder encode/decode") {

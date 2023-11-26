@@ -32,6 +32,9 @@ class UrlRenderTest extends AnyFunSpec with Matchers {
       assert(render.render(context, uri, "!save.html") == "/demo/security/!save.html")
       assert(render.render(context, uri, "user!search.html?id=1") == "/demo/security/user!search.html?id=1")
       assert(render.render(context, uri, "/database/query!history.html?id=1") == "/demo/database/query!history.html?id=1")
+
+      assert(render.render(context, uri, "/database/query", Map("id" -> "1", "code[0]" -> "XX"))
+        == "/demo/database/query?id=1&code%5B0%5D=XX")
     }
 
     it("testRenderEmptyContext") {

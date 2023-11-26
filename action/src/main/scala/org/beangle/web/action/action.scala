@@ -18,8 +18,7 @@
 package org.beangle.web.action
 
 import org.beangle.commons.lang.Strings
-
-import java.net.URLEncoder
+import org.beangle.web.servlet.url.UrlBuilder
 
 object To {
   def apply(clazz: Class[_], method: String = "index"): ToClass = {
@@ -134,20 +133,7 @@ trait ToBuilder extends To {
     val buf = new StringBuilder(uri)
     if (null != suffix) buf.append(suffix)
     if (parameters.nonEmpty) {
-      var first = true
-      for ((key, value) <- parameters) {
-        try {
-          if (first) {
-            buf.append('?')
-            first = false
-          } else {
-            buf.append('&')
-          }
-          buf.append(key).append("=").append(URLEncoder.encode(value, "UTF-8"))
-        } catch {
-          case e: Exception => throw new RuntimeException(e.getMessage)
-        }
-      }
+      buf.append('?').append(UrlBuilder.encodeParams(parameters))
     }
     buf.toString
   }

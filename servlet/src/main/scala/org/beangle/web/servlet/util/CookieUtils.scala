@@ -18,12 +18,11 @@
 package org.beangle.web.servlet.util
 
 import jakarta.servlet.http.{Cookie, HttpServletRequest, HttpServletResponse}
+import org.beangle.commons.lang.Charsets
 
 import java.net.{URLDecoder, URLEncoder}
 
 object CookieUtils {
-
-  private val Encoding = "utf-8"
 
   def getCookieValue(cookie: Cookie): String = decode(cookie.getValue)
 
@@ -61,7 +60,7 @@ object CookieUtils {
    */
   def addCookie(request: HttpServletRequest, response: HttpServletResponse,
                 name: String, value: String, path: String, age: Int): Unit = {
-    val cookie = new Cookie(name, URLEncoder.encode(value, Encoding))
+    val cookie = new Cookie(name, URLEncoder.encode(value, Charsets.UTF_8))
     val secure = RequestUtils.isHttps(request)
     cookie.setSecure(secure)
     cookie.setPath(path)
@@ -122,11 +121,11 @@ object CookieUtils {
   }
 
   def getPath(request: HttpServletRequest): String = {
-    if (request.getContextPath.length == 0) "/" else request.getContextPath
+    if (request.getContextPath.isEmpty) "/" else request.getContextPath
   }
 
   private def decode(cookieValue: String): String = {
-    try URLDecoder.decode(cookieValue, Encoding)
+    try URLDecoder.decode(cookieValue, Charsets.UTF_8)
     catch {
       case _: Exception => null
     }

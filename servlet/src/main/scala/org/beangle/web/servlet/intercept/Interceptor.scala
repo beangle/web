@@ -46,7 +46,7 @@ trait OncePerRequestInterceptor extends Interceptor {
   }
 
   override final def postInvoke(request: HttpServletRequest, response: HttpServletResponse): Unit = {
-    var count = request.getAttribute(attributeName).asInstanceOf[MutableInt]
+    val count = request.getAttribute(attributeName).asInstanceOf[MutableInt]
     if (count.decrement() == 0) doPostInvoke(request, response)
   }
 }

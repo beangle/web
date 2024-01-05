@@ -85,8 +85,9 @@ import Browser._
 @SerialVersionUID(-6200607575108416928L)
 class Browser(val category: BrowserCategory, val version: String) extends Serializable with Ordered[Browser] {
 
-  override def toString(): String =
+  override def toString: String = {
     category.name + " " + (if (version == null) "" else version)
+  }
 
   def compare(o: Browser): Int = category.ordinal - o.category.ordinal
 }

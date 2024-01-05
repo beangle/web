@@ -42,4 +42,4 @@ package org.beangle.web.servlet.http.agent
  * @since 2.4
  */
 @SerialVersionUID(367387526753100612L)
-class Useragent(val ip: String, val browser: Browser, val os: Os) extends Serializable
+case class Useragent(ip: String, browser: Browser, os: Os) extends Serializable

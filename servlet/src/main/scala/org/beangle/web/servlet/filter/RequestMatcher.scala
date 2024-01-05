@@ -17,12 +17,11 @@
 
 package org.beangle.web.servlet.filter
 
-import java.util.regex.Pattern
-
+import jakarta.servlet.http.HttpServletRequest
 import org.beangle.commons.regex.AntPathPattern
 import org.beangle.web.servlet.util.RequestUtils
 
-import jakarta.servlet.http.HttpServletRequest
+import java.util.regex.Pattern
 
 /**
  * Simple strategy to match an <tt>HttpServletRequest</tt>.
@@ -36,7 +35,7 @@ trait RequestMatcher {
    * request.
    *
    * @param request
-   *          the request to check for a match
+   * the request to check for a match
    * @return true if the request matches, false otherwise
    */
   def matches(request: HttpServletRequest): Boolean
@@ -77,7 +76,9 @@ class AntPathRequestMatcher(val pattern: AntPathPattern, val method: String) ext
       case _ => false
     }
 
-  override def toString(): String = if (null == method) s"Ant [pattern='$pattern']" else s"Ant [pattern='$pattern',method=method]"
+  override def toString: String = {
+    if (null == method) s"Ant [pattern='$pattern']" else s"Ant [pattern='$pattern',method=method]"
+  }
 }
 
 /**
@@ -104,7 +105,7 @@ class RegexRequestMatcher(pattern: Pattern, method: String) extends RequestMatch
    * Performs the match of the request URL ( {@code servletPath + pathInfo + queryString}) against
    * the compiled pattern.
    */
-  def matches(request: HttpServletRequest): Boolean =
+  def matches(request: HttpServletRequest): Boolean = {
     if (method != null && method != request.getMethod) false
     else {
       var url = RequestUtils.getServletPath(request)
@@ -118,4 +119,5 @@ class RegexRequestMatcher(pattern: Pattern, method: String) extends RequestMatch
       }
       pattern.matcher(url).matches()
     }
+  }
 }

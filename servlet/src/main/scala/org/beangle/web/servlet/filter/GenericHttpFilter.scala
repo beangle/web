@@ -17,8 +17,8 @@
 
 package org.beangle.web.servlet.filter
 
-import jakarta.servlet.{ Filter, FilterConfig, ServletException }
-import org.beangle.commons.bean.{ Initializing, Properties }
+import jakarta.servlet.{Filter, FilterConfig, ServletException}
+import org.beangle.commons.bean.{Initializing, Properties}
 import org.beangle.commons.lang.Strings
 
 import scala.collection.mutable
@@ -59,14 +59,12 @@ abstract class GenericHttpFilter extends Filter with Initializing {
   /**
    * Make the name of this filter available to subclasses.
    */
-  protected def filterName: String =
-    if (filterConfig != null) filterConfig.getFilterName else "None"
+  protected def filterName: String = if (filterConfig != null) filterConfig.getFilterName else "None"
 
   override def init(): Unit = {
   }
 
-  def config: FilterConfig =
-    this.filterConfig
+  def config: FilterConfig = this.filterConfig
 
   /**
    * Set of required properties (Strings) that must be supplied as config

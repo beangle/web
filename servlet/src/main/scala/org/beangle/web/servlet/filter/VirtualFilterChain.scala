@@ -17,7 +17,7 @@
 
 package org.beangle.web.servlet.filter
 
-import jakarta.servlet.{ Filter, FilterChain, ServletRequest, ServletResponse }
+import jakarta.servlet.{Filter, FilterChain, ServletRequest, ServletResponse}
 
 /**
  * A <code>FilterChain</code> that records whether or not
@@ -26,9 +26,10 @@ import jakarta.servlet.{ Filter, FilterChain, ServletRequest, ServletResponse }
  */
 class VirtualFilterChain(val originalChain: FilterChain, val filterIter: Iterator[_ <: Filter]) extends FilterChain {
 
-  def doFilter(request: ServletRequest, response: ServletResponse): Unit =
-    if (filterIter.hasNext)
+  def doFilter(request: ServletRequest, response: ServletResponse): Unit = {
+    if filterIter.hasNext then
       filterIter.next().doFilter(request, response, this)
     else
       originalChain.doFilter(request, response)
+  }
 }

@@ -17,14 +17,7 @@
 
 package org.beangle.web.servlet.filter
 
-import java.io.IOException
-import jakarta.servlet.Filter
-import jakarta.servlet.FilterChain
-import jakarta.servlet.FilterConfig
-import jakarta.servlet.ServletException
-import jakarta.servlet.ServletRequest
-import jakarta.servlet.ServletResponse
-import org.beangle.commons.lang.Strings
+import jakarta.servlet.{FilterChain, ServletRequest, ServletResponse}
 
 class CharacterEncodingFilter extends GenericHttpFilter {
 

@@ -17,9 +17,7 @@
 
 package org.beangle.web.servlet.util
 
-import jakarta.servlet.ServletContext
 import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
-import org.beangle.commons.codec.net.BCoder
 import org.beangle.commons.collection.Collections
 import org.beangle.commons.lang.{Charsets, Strings}
 import org.beangle.web.servlet.http.agent.*
@@ -79,11 +77,7 @@ object RequestUtils {
         if semicolonIdx > 0 then servletPath.substring(0, semicolonIdx) else servletPath
       } else {
         val semicolonIdx = uri.indexOf(';')
-        if (semicolonIdx > 0)
-          uri.substring(0, semicolonIdx)
-        else {
-          uri
-        }
+        if semicolonIdx > 0 then uri.substring(0, semicolonIdx) else uri
       }
     }
   }
@@ -108,18 +102,16 @@ object RequestUtils {
    */
   def getUserAgent(request: HttpServletRequest): Useragent = {
     val head = request.getHeader("USER-AGENT")
-    new Useragent(getIpAddr(request), Browser.parse(head), Os.parse(head))
+    Useragent(getIpAddr(request), Browser.parse(head), Os.parse(head))
   }
 
-  def isHttps(req: HttpServletRequest): Boolean =
-    req.getScheme() == "https" || "https" == req.getHeader("X-Forwarded-Proto")
+  def isHttps(req: HttpServletRequest): Boolean = {
+    req.getScheme == "https" || "https" == req.getHeader("X-Forwarded-Proto")
+  }
 
   def getServerPort(req: HttpServletRequest): Int = {
     val headPort = req.getHeader("X-Forwarded-Port")
-    if (Strings.isEmpty(headPort))
-      req.getServerPort()
-    else
-      Integer.parseInt(headPort)
+    if Strings.isEmpty(headPort) then req.getServerPort else Integer.parseInt(headPort)
   }
 
   def isAjax(request: HttpServletRequest): Boolean = {

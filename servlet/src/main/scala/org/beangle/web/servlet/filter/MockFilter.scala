@@ -17,11 +17,7 @@
 
 package org.beangle.web.servlet.filter
 
-import jakarta.servlet.Filter
-import jakarta.servlet.FilterChain
-import jakarta.servlet.FilterConfig
-import jakarta.servlet.ServletRequest
-import jakarta.servlet.ServletResponse
+import jakarta.servlet.*
 
 /**
  * A simple filter that the test case can delegate to.
@@ -36,14 +32,12 @@ class MockFilter extends Filter {
 
   var initialized: Boolean = false
 
-  override def destroy(): Unit =
-    destroyed = true
+  override def destroy(): Unit = destroyed = true
 
   def doFilter(request: ServletRequest, response: ServletResponse, chain: FilterChain): Unit = {
     doFiltered = true
     chain.doFilter(request, response)
   }
 
-  override def init(config: FilterConfig): Unit =
-    initialized = true
+  override def init(config: FilterConfig): Unit = initialized = true
 }

@@ -1,9 +1,9 @@
-import org.beangle.parent.Dependencies._
-import org.beangle.parent.Settings._
+import org.beangle.parent.Dependencies.*
+import org.beangle.parent.Settings.*
 import sbt.url
 
 ThisBuild / organization := "org.beangle.web"
-ThisBuild / version := "0.4.11-SNAPSHOT"
+ThisBuild / version := "0.4.11"
 
 ThisBuild / scmInfo := Some(
   ScmInfo(
@@ -14,37 +14,22 @@ ThisBuild / scmInfo := Some(
 
 ThisBuild / developers := List(
   Developer(
-    id    = "chaostone",
-    name  = "Tihua Duan",
+    id = "chaostone",
+    name = "Tihua Duan",
     email = "duantihua@gmail.com",
-    url   = url("http://github.com/duantihua")
+    url = url("http://github.com/duantihua")
   )
 )
 
 ThisBuild / description := "The Beangle Web Library"
 ThisBuild / homepage := Some(url("http://beangle.github.io/web/index.html"))
 
-val beangle_commons_core = "org.beangle.commons" %% "beangle-commons-core" % "5.6.10"
-val beangle_commons_text = "org.beangle.commons" %% "beangle-commons-text" % "5.6.10"
-val webDeps = Seq(beangle_commons_core, logback_classic, logback_core, scalatest, servletapi, mockito)
-
+val beangle_commons = "org.beangle.commons" % "beangle-commons" % "5.6.15"
 
 lazy val root = (project in file("."))
-  .settings()
-  .aggregate(servlet,action)
-
-lazy val servlet = (project in file("servlet"))
   .settings(
-    name := "beangle-web-servlet",
+    name := "beangle-web",
     common,
-    libraryDependencies ++= webDeps
+    libraryDependencies ++= Seq(beangle_commons, servletapi, scalaxml),
+    libraryDependencies ++= Seq(mockito, scalatest, logback_classic % "test"),
   )
-
-lazy val action = (project in file("action"))
-  .settings(
-    name := "beangle-web-action",
-    common,
-    libraryDependencies ++= (webDeps ++ Seq(beangle_commons_text,scalaxml))
-  ).dependsOn(servlet)
-
-publish / skip := true

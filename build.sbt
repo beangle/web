@@ -3,7 +3,7 @@ import org.beangle.parent.Settings.*
 import sbt.url
 
 ThisBuild / organization := "org.beangle.web"
-ThisBuild / version := "0.4.12"
+ThisBuild / version := "0.4.13-SNAPSHOT"
 
 ThisBuild / scmInfo := Some(
   ScmInfo(

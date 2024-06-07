@@ -17,7 +17,7 @@
 
 package org.beangle.web.action.view
 
-import org.beangle.commons.activation.MediaTypes
+import org.beangle.commons.activation.{MediaType, MediaTypes}
 import org.beangle.commons.lang.Strings.{isBlank, substringAfterLast}
 
 import java.io.{File, FileInputStream, InputStream}
@@ -35,7 +35,7 @@ object Stream {
     apply(url, decideContentType(fileName), displayName)
   }
 
-  def apply(url: URL, contentType: String, displayName: String): StreamView = {
+  def apply(url: URL, contentType: MediaType, displayName: String): StreamView = {
     val fileName = substringAfterLast(url.toString, "/")
     val conn = url.openConnection()
     new StreamView(conn.getInputStream, contentType, getAttachName(fileName, displayName), Some(conn.getLastModified))
@@ -51,16 +51,16 @@ object Stream {
     apply(file, decideContentType(fileName), displayName)
   }
 
-  def apply(file: File, contentType: String, displayName: String): StreamView = {
+  def apply(file: File, contentType: MediaType, displayName: String): StreamView = {
     new StreamView(new FileInputStream(file), contentType, getAttachName(file.getName, displayName), Some(file.lastModified()))
   }
 
-  def apply(is: InputStream, contentType: String, displayName: String, lastModified: Option[Long] = None): StreamView = {
+  def apply(is: InputStream, contentType: MediaType, displayName: String, lastModified: Option[Long] = None): StreamView = {
     new StreamView(is, contentType, displayName, lastModified)
   }
 
-  private def decideContentType(fileName: String): String = {
-    MediaTypes.get(substringAfterLast(fileName, "."), MediaTypes.ApplicationOctetStream).toString
+  private def decideContentType(fileName: String): MediaType = {
+    MediaTypes.get(substringAfterLast(fileName, "."), MediaTypes.ApplicationOctetStream)
   }
 
   private def getAttachName(fileName: String, display: String = null): String = {
@@ -80,7 +80,7 @@ object Stream {
   }
 }
 
-class StreamView(val inputStream: InputStream, val contentType: String, val displayName: String, val lastModified: Option[Long]) extends View {
+class StreamView(val inputStream: InputStream, val contentType: MediaType, val displayName: String, val lastModified: Option[Long]) extends View {
 
   var postHook: Option[() => Unit] = None
 

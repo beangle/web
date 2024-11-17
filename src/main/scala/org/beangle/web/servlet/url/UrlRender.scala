@@ -23,7 +23,6 @@ import org.beangle.web.servlet.url.UrlBuilder.separator
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
 
-
 class UrlRender {
 
   def render(context: String, referer: String, uri: String, params: Map[String, String]): String = {

@@ -36,7 +36,10 @@ class CookieGenerator(val name: String) {
   def addCookie(request: HttpServletRequest, response: HttpServletResponse, value: String): Unit = {
     val cookie = createCookie(request, value)
     cookie.setMaxAge(maxAge)
-    cookie.setSecure(secure)
+    if(secure){
+      cookie.setSecure(secure)
+      cookie.setAttribute("SameSite", "None")
+    }
     cookie.setHttpOnly(httpOnly)
     response.addCookie(cookie)
   }

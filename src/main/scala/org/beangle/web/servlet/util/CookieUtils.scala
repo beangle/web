@@ -61,12 +61,14 @@ object CookieUtils {
   def addCookie(request: HttpServletRequest, response: HttpServletResponse,
                 name: String, value: String, path: String, age: Int): Unit = {
     val cookie = new Cookie(name, URLEncoder.encode(value, Charsets.UTF_8))
-    val secure = RequestUtils.isHttps(request)
-    cookie.setSecure(secure)
     cookie.setPath(path)
     cookie.setMaxAge(age)
     cookie.setHttpOnly(true)
-    if secure then cookie.setAttribute("SameSite", "None")
+    val secure = RequestUtils.isHttps(request)
+    if (secure) {
+      cookie.setSecure(secure)
+      cookie.setAttribute("SameSite", "None")
+    }
     response.addCookie(cookie)
   }
 
@@ -75,13 +77,11 @@ object CookieUtils {
    */
   def addCookie(request: HttpServletRequest, response: HttpServletResponse,
                 name: String, value: String, age: Int): Unit = {
-    val path = getPath(request)
-    addCookie(request, response, name, value, path, age)
+    addCookie(request, response, name, value, getPath(request), age)
   }
 
   def deleteCookieByName(request: HttpServletRequest, response: HttpServletResponse, name: String): Boolean = {
-    val path = getPath(request)
-    deleteCookie(response, getCookie(request, name), path)
+    deleteCookie(response, getCookie(request, name), getPath(request))
   }
 
   /**

@@ -18,7 +18,7 @@
 package org.beangle.web.servlet.url
 
 import jakarta.servlet.http.HttpServletRequest
-import org.beangle.commons.lang.Charsets
+import org.beangle.commons.lang.{Charsets, Strings}
 import org.beangle.web.servlet.util.RequestUtils
 
 import java.net.URLEncoder
@@ -49,6 +49,24 @@ object UrlBuilder {
     }
     sb.delete(sb.length - separator.length, sb.length)
     sb.toString()
+  }
+
+  def encodeURI(uri: String): String = {
+    val idx = uri.indexOf("?")
+    if (idx > 0) {
+      val queryString = uri.substring(idx + 1)
+      val pairs = Strings.split(queryString, "&")
+      val sb = new StringBuilder(uri.substring(0, idx + 1))
+      pairs foreach { pair =>
+        val k = pair.substring(0, pair.indexOf("="));
+        val v = pair.substring(pair.indexOf("=") + 1);
+        sb.append(URLEncoder.encode(k, "utf-8")).append("=").append(URLEncoder.encode(v, "utf-8").replace("+", "%20")).append("&");
+      }
+      sb.deleteCharAt(sb.length() - 1);
+      sb.toString()
+    } else {
+      uri
+    }
   }
 }
 

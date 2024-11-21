@@ -17,8 +17,8 @@
 
 package org.beangle.web.servlet.url
 
-import org.scalatest.matchers.should.Matchers
 import org.scalatest.funspec.AnyFunSpec
+import org.scalatest.matchers.should.Matchers
 
 /**
  * @author chaostone
@@ -45,6 +45,11 @@ class UrlBuilderTest extends AnyFunSpec with Matchers {
       builder.buildRequestUrl() should be equals ("/security/user?name=1&fullname=join")
       builder.setRequestURI("/demo/security/user")
       builder.buildRequestUrl() should be equals ("/security/user?name=1&fullname=join")
+    }
+    it("encodeURI") {
+      val uri = "http://localhost/sastask/call/sues?commands=/home/openurp/task/new_occupy.sh 2024-2025 1 131070 6-1,6-2 航飞楼6213-6215 2024-09-02"
+      val decoded = UrlBuilder.encodeURI(uri)
+      assert(decoded == "http://localhost/sastask/call/sues?commands=%2Fhome%2Fopenurp%2Ftask%2Fnew_occupy.sh%202024-2025%201%20131070%206-1%2C6-2%20%E8%88%AA%E9%A3%9E%E6%A5%BC6213-6215%202024-09-02")
     }
   }
 }

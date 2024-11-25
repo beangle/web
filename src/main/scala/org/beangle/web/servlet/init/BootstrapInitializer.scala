@@ -84,14 +84,13 @@ class BootstrapInitializer extends ServletContainerInitializer {
             }
           }
         }
-        if (register)
-          listeners foreach { l =>
-            ctx.addListener(l)
-          }
+        if register then listeners foreach (l => ctx.addListener(l))
       }
     }
   }
 
-  def addListener(other: ServletContextListener): Unit =  listeners += other
+  def addListener(other: ServletContextListener): Unit = {
+    listeners += other
+  }
 
 }

@@ -32,4 +32,5 @@ lazy val root = (project in file("."))
     common,
     libraryDependencies ++= Seq(beangle_commons, servletapi, scalaxml),
     libraryDependencies ++= Seq(mockito, scalatest, logback_classic % "test"),
+    libraryDependencies ++= Seq(websocketapi % "optional", websocket_client_api % "optional")
   )

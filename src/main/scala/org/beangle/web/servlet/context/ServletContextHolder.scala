@@ -23,6 +23,7 @@ object ServletContextHolder {
 
   var context: ServletContext = _
 
-  def store(servletContext: ServletContext): Unit =
+  def store(servletContext: ServletContext): Unit = {
     context = servletContext
+  }
 }

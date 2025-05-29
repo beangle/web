@@ -26,6 +26,11 @@ import java.net.URLEncoder
 
 object RequestUtils {
 
+  private val XForwardedFor = "x-forwarded-for"
+  private val XForwardedProto = "X-Forwarded-Proto"
+  private val XForwardedPort = "X-Forwarded-Port"
+  private val XRequestedWith = "x-requested-with"
+
   /**
    * Returns remote ip address.
    * <ul>
@@ -33,15 +38,15 @@ object RequestUtils {
    * <li>Second,invoke request.getRemoteAddr()
    * </ul>
    *
-   * @param request
+   * @param request http request
    */
   def getIpAddr(request: HttpServletRequest): String = {
-    val ip = request.getHeader("x-forwarded-for")
+    val ip = request.getHeader(XForwardedFor)
     if (null == ip) request.getRemoteAddr else ip
   }
 
   def getProxies(request: HttpServletRequest): List[String] = {
-    val headers = request.getHeaders("x-forwarded-for")
+    val headers = request.getHeaders(XForwardedFor)
     if (headers.hasMoreElements) {
       val client = headers.nextElement
       val proxies = Collections.newBuffer[String]
@@ -106,16 +111,16 @@ object RequestUtils {
   }
 
   def isHttps(req: HttpServletRequest): Boolean = {
-    req.getScheme == "https" || "https" == req.getHeader("X-Forwarded-Proto")
+    req.getScheme.toLowerCase == "https" || "https".equalsIgnoreCase(req.getHeader(XForwardedProto))
   }
 
   def getServerPort(req: HttpServletRequest): Int = {
-    val headPort = req.getHeader("X-Forwarded-Port")
+    val headPort = req.getHeader(XForwardedPort)
     if Strings.isEmpty(headPort) then req.getServerPort else Integer.parseInt(headPort)
   }
 
   def isAjax(request: HttpServletRequest): Boolean = {
-    val headers = request.getHeaders("x-requested-with")
+    val headers = request.getHeaders(XRequestedWith)
     while (headers.hasMoreElements) {
       val header = headers.nextElement()
       if (header == "XMLHttpRequest") return true

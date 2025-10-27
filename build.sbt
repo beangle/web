@@ -3,7 +3,7 @@ import org.beangle.parent.Settings.*
 import sbt.url
 
 ThisBuild / organization := "org.beangle.web"
-ThisBuild / version := "0.6.6-SNAPSHOT"
+ThisBuild / version := "0.6.6"
 
 ThisBuild / scmInfo := Some(
   ScmInfo(
@@ -24,13 +24,13 @@ ThisBuild / developers := List(
 ThisBuild / description := "The Beangle Web Library"
 ThisBuild / homepage := Some(url("http://beangle.github.io/web/index.html"))
 
-val beangle_commons = "org.beangle.commons" % "beangle-commons" % "5.6.30"
+val beangle_commons = "org.beangle.commons" % "beangle-commons" % "5.6.32"
 
 lazy val root = (project in file("."))
   .settings(
     name := "beangle-web",
     common,
-    libraryDependencies ++= Seq(beangle_commons, servletapi, scalaxml),
+    libraryDependencies ++= Seq(servletapi, beangle_commons),
     libraryDependencies ++= Seq(mockito, scalatest, logback_classic % "test"),
     libraryDependencies ++= Seq(websocketapi % "optional", websocket_client_api % "optional")
   )

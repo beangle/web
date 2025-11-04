@@ -22,14 +22,11 @@ import jakarta.servlet.{ServletContainerInitializer, ServletContext, ServletCont
 import org.beangle.commons.io.IOs
 import org.beangle.commons.lang.ClassLoaders
 import org.beangle.commons.lang.Strings.{split, substringAfter, substringBefore}
+import org.beangle.commons.lang.reflect.Reflections
 import org.beangle.web.servlet.context.ServletContextHolder
 
+import java.net.URL
 import java.util as ju
-import java.util.EnumSet
-
-object BootstrapInitializer {
-  val InitFile = "META-INF/beangle/web-init.properties"
-}
 
 /**
  * Web BootstrapListener
@@ -53,10 +50,9 @@ class BootstrapInitializer extends ServletContainerInitializer {
     } else {
       ServletContextHolder.store(ctx)
       val initializers = new ju.LinkedList[Initializer]
-      ClassLoaders.getResources(BootstrapInitializer.InitFile) foreach { url =>
-        IOs.readJavaProperties(url) get ("initializer") match {
-          case Some(clazz) => initializers.add(ClassLoaders.load(clazz).getDeclaredConstructor().newInstance().asInstanceOf[Initializer])
-          case None =>
+      ClassLoaders.getResources("beangle.xml") foreach { url =>
+        fromXml(url) foreach { clazzName =>
+          initializers.add(Reflections.newInstance[Initializer](clazzName))
         }
       }
 
@@ -80,7 +76,7 @@ class BootstrapInitializer extends ServletContainerInitializer {
             split(substringAfter(order, "="), ",") foreach { filterName =>
               val fr = ctx.getFilterRegistration(filterName)
               if (null == fr) sys.error(s"Cannot find filter $filterName")
-              fr.addMappingForUrlPatterns(EnumSet.of(REQUEST), true, pattern)
+              fr.addMappingForUrlPatterns(ju.EnumSet.of(REQUEST), true, pattern)
             }
           }
         }
@@ -91,6 +87,13 @@ class BootstrapInitializer extends ServletContainerInitializer {
 
   def addListener(other: ServletContextListener): Unit = {
     listeners += other
+  }
+
+  private def fromXml(url: URL): Seq[String] = {
+    val is = url.openStream()
+    val initializers = (scala.xml.XML.load(is) \ "web" \ "initializer") map { i => (i \ "@class").text }
+    IOs.close(is)
+    initializers
   }
 
 }

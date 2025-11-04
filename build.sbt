@@ -30,7 +30,7 @@ lazy val root = (project in file("."))
   .settings(
     name := "beangle-web",
     common,
-    libraryDependencies ++= Seq(servletapi, beangle_commons),
+    libraryDependencies ++= Seq(servletapi, beangle_commons, scalaxml),
     libraryDependencies ++= Seq(mockito, scalatest, logback_classic % "test"),
     libraryDependencies ++= Seq(websocketapi % "optional", websocket_client_api % "optional")
   )

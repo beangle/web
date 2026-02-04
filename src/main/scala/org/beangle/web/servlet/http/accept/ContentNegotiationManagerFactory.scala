@@ -17,16 +17,15 @@
 
 package org.beangle.web.servlet.http.accept
 
-import org.beangle.commons.bean.Factory
-import org.beangle.commons.bean.Initializing
+import org.beangle.commons.bean.{Factory, Initializing}
 
-class ContentNegotiationManagerFactory extends Factory[ContentNegotiationManager] with Initializing {
+class ContentNegotiationManagerFactory extends Factory[ContentNegotiationManager], Initializing {
 
   var favorParameter: Boolean = _
   var favorPathExtension: Boolean = _
   var ignoreAcceptHeader: Boolean = _
   var parameterName: String = _
-  var result: ContentNegotiationManager = null
+  private var result: ContentNegotiationManager = null
 
   override def init(): Unit = {
     val resolvers = new collection.mutable.ListBuffer[ContentTypeResolver]
@@ -35,4 +34,6 @@ class ContentNegotiationManagerFactory extends Factory[ContentNegotiationManager
     if (!this.ignoreAcceptHeader) resolvers += new HeaderContentTypeResolver()
     result = new ContentNegotiationManager(resolvers.toList)
   }
+
+  override def getObject: ContentNegotiationManager = result
 }

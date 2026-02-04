@@ -19,6 +19,8 @@ package org.beangle.web.servlet.init
 
 import jakarta.servlet.DispatcherType.REQUEST
 import jakarta.servlet.{ServletContainerInitializer, ServletContext, ServletContextListener}
+import org.beangle.commons.collection.Collections
+import org.beangle.commons.config.XmlConfigs
 import org.beangle.commons.io.IOs
 import org.beangle.commons.lang.ClassLoaders
 import org.beangle.commons.lang.Strings.{split, substringAfter, substringBefore}
@@ -49,24 +51,23 @@ class BootstrapInitializer extends ServletContainerInitializer {
       ctx.log("Bootstrap has executed,aborted")
     } else {
       ServletContextHolder.store(ctx)
-      val initializers = new ju.LinkedList[Initializer]
-      ClassLoaders.getResources("beangle.xml") foreach { url =>
-        fromXml(url) foreach { clazzName =>
-          initializers.add(Reflections.newInstance[Initializer](clazzName))
-        }
+      val initializers = Collections.newBuffer[Initializer]
+      val doc = XmlConfigs.load("classpath*:beangle.xml")
+      (doc \ "web" \ "initializer") foreach { i =>
+        initializers.addOne(Reflections.newInstance[Initializer]((i \ "@class").text))
       }
 
       if (initializers.isEmpty)
         ctx.log("None beangle initializer was detected on classpath.")
       else {
-        import scala.jdk.CollectionConverters.*
-        val inits = initializers.asScala
-        for (initializer <- inits) {
-          initializer.boss = this
-          ctx.log(s"${initializer.getClass.getName} initializing ...")
-          initializer.onConfig(ctx)
+        initializers foreach { i =>
+          i.boss = this
+          i.onConfig(ctx)
         }
-        inits foreach (x => x.onStartup(ctx))
+        initializers foreach { x =>
+          ctx.log(s"${x.getClass.getName} initializing ...")
+          x.onStartup(ctx)
+        }
         //process filter order
         val filterOrders = ctx.getInitParameter("filter-orders")
         if (null != filterOrders) {
@@ -88,12 +89,4 @@ class BootstrapInitializer extends ServletContainerInitializer {
   def addListener(other: ServletContextListener): Unit = {
     listeners += other
   }
-
-  private def fromXml(url: URL): Seq[String] = {
-    val is = url.openStream()
-    val initializers = (scala.xml.XML.load(is) \ "web" \ "initializer") map { i => (i \ "@class").text }
-    IOs.close(is)
-    initializers
-  }
-
 }

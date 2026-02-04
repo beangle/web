@@ -24,13 +24,13 @@ ThisBuild / developers := List(
 ThisBuild / description := "The Beangle Web Library"
 ThisBuild / homepage := Some(url("http://beangle.github.io/web/index.html"))
 
-val beangle_commons = "org.beangle.commons" % "beangle-commons" % "5.8.1"
+val beangle_commons = "org.beangle.commons" % "beangle-commons" % "6.0.0-SNAPSHOT"
 
 lazy val root = (project in file("."))
   .settings(
     name := "beangle-web",
     common,
-    libraryDependencies ++= Seq(servletapi, beangle_commons, scalaxml),
+    libraryDependencies ++= Seq(servletapi, beangle_commons),
     libraryDependencies ++= Seq(mockito, scalatest, logback_classic % "test"),
     libraryDependencies ++= Seq(websocketapi % "optional", websocket_client_api % "optional")
   )

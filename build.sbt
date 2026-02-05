@@ -3,7 +3,7 @@ import org.beangle.parent.Settings.*
 import sbt.url
 
 ThisBuild / organization := "org.beangle.web"
-ThisBuild / version := "0.7.3-SNAPSHOT"
+ThisBuild / version := "0.7.3"
 
 ThisBuild / scmInfo := Some(
   ScmInfo(
@@ -24,7 +24,7 @@ ThisBuild / developers := List(
 ThisBuild / description := "The Beangle Web Library"
 ThisBuild / homepage := Some(url("http://beangle.github.io/web/index.html"))
 
-val beangle_commons = "org.beangle.commons" % "beangle-commons" % "6.0.0-SNAPSHOT"
+val beangle_commons = "org.beangle.commons" % "beangle-commons" % "6.0.0"
 
 lazy val root = (project in file("."))
   .settings(

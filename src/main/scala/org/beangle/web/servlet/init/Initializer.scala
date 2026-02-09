@@ -17,33 +17,36 @@
 
 package org.beangle.web.servlet.init
 
-import jakarta.servlet.ServletContext
-import jakarta.servlet.ServletException
-import jakarta.servlet.ServletContextListener
+import jakarta.servlet.{ServletContext, ServletContextListener, ServletException}
 
-/**
+/** Web初始化接口
+ *
  * @see BootstrapListener.InitFile
  */
 trait Initializer {
   var boss: BootstrapInitializer = _
 
-  /**
-   * config servletContext
-   * @param servletContext
+  /** 配置web上下文
+   *
+   * @param context servletContext
    */
-  def onConfig(servletContext: ServletContext): Unit = {
+  def onConfig(context: ServletContext): Unit = {
 
   }
 
-  /**
+  /** 启动上下文
    * Configure the given {@link ServletContext} with any servlets, filters, listeners
    * context-params and attributes necessary for initializing this web application.
-   * @param servletContext the {@code ServletContext} to initialize
+   *
+   * @param context servletContext
    */
   @throws(classOf[ServletException])
-  def onStartup(servletContext: ServletContext): Unit
+  def onStartup(context: ServletContext): Unit
 
   final def addListener(other: ServletContextListener): Unit = {
     boss.addListener(other)
   }
+
+  def order: Int = 1024
+
 }

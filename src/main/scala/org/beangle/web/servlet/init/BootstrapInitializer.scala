@@ -51,12 +51,13 @@ class BootstrapInitializer extends ServletContainerInitializer {
       ctx.log("Bootstrap has executed,aborted")
     } else {
       ServletContextHolder.store(ctx)
-      val initializers = Collections.newBuffer[Initializer]
+      val inits = Collections.newBuffer[Initializer]
       val doc = XmlConfigs.load("classpath*:beangle.xml")
       (doc \ "web" \ "initializer") foreach { i =>
-        initializers.addOne(Reflections.newInstance[Initializer]((i \ "@class").text))
+        inits.addOne(Reflections.newInstance[Initializer]((i \ "@class").text))
       }
 
+      val initializers = inits.sortBy(_.order)
       if (initializers.isEmpty)
         ctx.log("None beangle initializer was detected on classpath.")
       else {

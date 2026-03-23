@@ -51,10 +51,13 @@ class OsTest extends AnyFunSpec with Matchers {
       os.version should equal("6.0.0.141")
 
       os = Os.parse(linux(0))
-      os.version should equal("Fedora fc14")
+      os.version should equal("Fedora 3.6.12-1.fc14")
 
       os = Os.parse(android)
       os.version should equal("10")
+
+      os = Os.parse("Mozilla/5.0 (Fedora/6.18.13-200.fc43.x86_64) Java/21.0.10+7")
+      os.version should equal("Fedora 6.18.13-200.fc43.x86_64")
     }
   }
 }

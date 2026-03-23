@@ -18,7 +18,7 @@
 package org.beangle.web.servlet.url
 
 import jakarta.servlet.http.HttpServletRequest
-import org.beangle.commons.lang.{Charsets, Strings}
+import org.beangle.commons.lang.Strings
 import org.beangle.web.servlet.util.RequestUtils
 
 import java.net.URLEncoder
@@ -42,12 +42,15 @@ object UrlBuilder {
   def encodeParams(params: collection.Map[String, String]): String = {
     val sb = new StringBuilder()
     for ((key, value) <- params) {
-      sb.append(URLEncoder.encode(key, Charsets.UTF_8))
-        .append('=')
-        .append(URLEncoder.encode(value, Charsets.UTF_8))
-        .append(separator)
+      sb.append(encodeParam(key, value)).append(separator)
     }
     sb.delete(sb.length - separator.length, sb.length)
+    sb.toString()
+  }
+
+  def encodeParam(key: String, value: String): String = {
+    val sb = new StringBuilder
+    sb.append(URLEncoder.encode(key, "utf-8")).append("=").append(URLEncoder.encode(value, "utf-8").replace("+", "%20"))
     sb.toString()
   }
 
@@ -58,9 +61,9 @@ object UrlBuilder {
       val pairs = Strings.split(queryString, "&")
       val sb = new StringBuilder(uri.substring(0, idx + 1))
       pairs foreach { pair =>
-        val k = pair.substring(0, pair.indexOf("="));
-        val v = pair.substring(pair.indexOf("=") + 1);
-        sb.append(URLEncoder.encode(k, "utf-8")).append("=").append(URLEncoder.encode(v, "utf-8").replace("+", "%20")).append("&");
+        val k = pair.substring(0, pair.indexOf("="))
+        val v = pair.substring(pair.indexOf("=") + 1)
+        sb.append(encodeParam(k, v)).append("&")
       }
       sb.deleteCharAt(sb.length() - 1);
       sb.toString()
@@ -69,6 +72,7 @@ object UrlBuilder {
     }
   }
 }
+
 
 /**
  * @author chaostone

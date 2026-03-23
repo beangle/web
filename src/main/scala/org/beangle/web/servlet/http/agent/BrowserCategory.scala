@@ -21,7 +21,7 @@ import org.beangle.commons.lang.Strings
 import org.beangle.web.servlet.http.agent.Engine
 import org.beangle.web.servlet.http.agent.Engine.*
 
-import java.util.regex.{Matcher, Pattern}
+import java.util.regex.Pattern
 
 /**
  * 浏览器种类
@@ -78,6 +78,8 @@ enum BrowserCategory(val name: String, val engine: Engine, versions: String*) {
   case Lynx extends BrowserCategory("Lynx", Other, "Lynx")
 
   case Download extends BrowserCategory("Downloading Tool", Other, "cURL", "wget")
+
+  case JavaClient extends BrowserCategory("Java", Java, "Java/(\\S*)->$1")
 
   case Unknown extends BrowserCategory("Unknown", Other)
 

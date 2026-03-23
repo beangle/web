@@ -24,6 +24,8 @@ import java.net.{URLDecoder, URLEncoder}
 
 object CookieUtils {
 
+  val DisableCookie = "beangle.web.disable_cookie"
+
   def getCookieValue(cookie: Cookie): String = decode(cookie.getValue)
 
   /**

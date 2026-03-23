@@ -47,8 +47,9 @@ class UrlRender {
     sb.toString
   }
 
-  def render(context: String, referer: String, uri: String): String =
+  def render(context: String, referer: String, uri: String): String = {
     renderUri(context, referer, uri).toString
+  }
 
   private def renderUri(context: String, referer: String, uriStr: String): StringBuilder = {
     val sb = new StringBuilder()

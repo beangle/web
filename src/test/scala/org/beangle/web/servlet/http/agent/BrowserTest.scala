@@ -77,6 +77,10 @@ class BrowserTest extends AnyFunSpec with Matchers {
       browser = Browser.parse(alipay(0))
       browser.category should equal(BrowserCategory.AliPay)
       browser.version should be ("10.1.8.112317")
+
+      browser = Browser.parse("Java/21.0.10+7 (Fedora/6.18.13-200.fc43.x86_64)")
+      browser.category should equal(BrowserCategory.JavaClient)
+      browser.version should be ("21.0.10+7")
     }
   }
 }

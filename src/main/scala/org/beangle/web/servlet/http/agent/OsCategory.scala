@@ -40,7 +40,7 @@ enum OsCategory(val name: String, versions: String*) {
 
   case Android extends OsCategory("Android", "Android ([\\d.]*)->$1", "GoogleTV->(Google TV)", "Android")
 
-  case Linux extends OsCategory("Linux", "Fedora/(\\S*)\\.fc(\\S*)->Fedora fc$2", "Ubuntu/(\\S*)->Ubuntu $1",
+  case Linux extends OsCategory("Linux", "Fedora/(\\S*)->Fedora $1", "Ubuntu/(\\S*)->Ubuntu $1",
     "Fedora", "Ubuntu", "Linux", "CamelHttpStream")
 
   case Ios extends OsCategory("iOS", "iPhone OS(\\S*)->$1 (iPhone)", "like Mac OS X", "iOS")

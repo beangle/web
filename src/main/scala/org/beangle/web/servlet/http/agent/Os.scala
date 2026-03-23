@@ -18,6 +18,7 @@
 package org.beangle.web.servlet.http.agent
 
 import org.beangle.commons.lang.Strings
+
 import scala.collection.mutable
 
 object Os {
@@ -39,8 +40,11 @@ object Os {
     val categoryItor = OsCategory.values.iterator
     while (categoryItor.hasNext) {
       val category = categoryItor.next()
-      val version = category.matches(agentString)
+      var version = category.matches(agentString)
       if (version != null) {
+        if (version.endsWith(";") || version.endsWith(")")) {
+          version = version.substring(0, version.length - 1)
+        }
         val key = category.name + "/" + version
         var os = osMap.get(key).orNull
         if (null == os) {
@@ -54,12 +58,12 @@ object Os {
   }
 }
 
-import Os._
 @SerialVersionUID(-7506270303767154240L)
-class Os private (val category: OsCategory, val version: String) extends Serializable with Ordered[Os] {
+class Os private(val category: OsCategory, val version: String) extends Serializable with Ordered[Os] {
 
-  override def toString(): String =
+  override def toString: String = {
     category.name + " " + (if (version == null) "" else version)
+  }
 
   def compare(o: Os): Int = category.ordinal - o.category.ordinal
 }

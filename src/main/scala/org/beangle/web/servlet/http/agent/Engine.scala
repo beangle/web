@@ -17,7 +17,7 @@
 
 package org.beangle.web.servlet.http.agent
 
-enum Engine(var name: String,var categories: List[BrowserCategory]=List.empty) {
+enum Engine(var name: String, var categories: List[BrowserCategory] = List.empty) {
 
   case Trident extends Engine("Trident")
 
@@ -32,6 +32,8 @@ enum Engine(var name: String,var categories: List[BrowserCategory]=List.empty) {
   case Khtml extends Engine("KHTML")
 
   case Word extends Engine("Microsoft Office Word")
+
+  case Java extends Engine("Java")
 
   case Other extends Engine("Other")
 

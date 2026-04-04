@@ -58,7 +58,7 @@ object CookieUtils {
 
   /**
    * Convenience method to set a cookie <br>
-   * 刚方法自动将value进行编码存储
+   * 该方法自动将value进行编码存储
    */
   def addCookie(request: HttpServletRequest, response: HttpServletResponse,
                 name: String, value: String, path: String, age: Int): Unit = {
@@ -66,11 +66,11 @@ object CookieUtils {
     cookie.setPath(path)
     cookie.setMaxAge(age)
     cookie.setHttpOnly(true)
-    val secure = RequestUtils.isHttps(request)
-    if (secure) {
-      cookie.setSecure(secure)
+    if RequestUtils.isHttps(request) then
+      cookie.setSecure(true)
       cookie.setAttribute("SameSite", "None")
-    }
+    else
+      cookie.setAttribute("SameSite", "Lax")
     response.addCookie(cookie)
   }
 

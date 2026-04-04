@@ -17,10 +17,9 @@
 
 package org.beangle.web.servlet.util
 
+import jakarta.servlet.http.{Cookie, HttpServletRequest, HttpServletResponse}
 import org.beangle.commons.lang.Strings
 import org.beangle.web.servlet.url.UrlBuilder
-
-import jakarta.servlet.http.{ Cookie, HttpServletRequest, HttpServletResponse }
 
 /**
  * @author chaostone
@@ -36,10 +35,11 @@ class CookieGenerator(val name: String) {
   def addCookie(request: HttpServletRequest, response: HttpServletResponse, value: String): Unit = {
     val cookie = createCookie(request, value)
     cookie.setMaxAge(maxAge)
-    if(secure){
-      cookie.setSecure(secure)
+    if secure then
+      cookie.setSecure(true)
       cookie.setAttribute("SameSite", "None")
-    }
+    else
+      cookie.setAttribute("SameSite", "Lax")
     cookie.setHttpOnly(httpOnly)
     response.addCookie(cookie)
   }

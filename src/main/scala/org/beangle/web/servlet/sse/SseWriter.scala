@@ -18,8 +18,10 @@
 package org.beangle.web.servlet.sse
 
 import jakarta.servlet.http.HttpServletResponse
+import org.beangle.commons.concurrent.Locks
 
 import java.io.IOException
+import java.util.concurrent.locks.ReentrantLock
 
 /**
  * SSE 写出器；不负责请求超时。在异步 Servlet 中应在 [[jakarta.servlet.AsyncContext]] 上
@@ -31,6 +33,7 @@ class SseWriter(resp: HttpServletResponse) {
   private var errorCallback: Option[Throwable => Unit] = None
   private var completed: Boolean = false
   private var error: Throwable = _
+  private val lock = new ReentrantLock()
 
   def onCompletion(callback: () => Unit): Unit = {
     completionCallback = Some(callback)
@@ -41,7 +44,7 @@ class SseWriter(resp: HttpServletResponse) {
   }
 
   def complete(): Unit = {
-    val firstClose = synchronized {
+    val firstClose = Locks.withLock(lock) {
       if (!completed) {
         completed = true
         true
@@ -51,7 +54,7 @@ class SseWriter(resp: HttpServletResponse) {
   }
 
   def completeWithError(t: Throwable): Unit = {
-    val firstClose = synchronized {
+    val firstClose = Locks.withLock(lock) {
       if (!completed) {
         completed = true
         true
@@ -97,7 +100,7 @@ class SseWriter(resp: HttpServletResponse) {
       doSend(finishSseEvent(obj))
     catch {
       case ex: Exception =>
-        synchronized {
+        Locks.withLock(lock) {
           this.error = ex
           if (!completed) completed = true
         }

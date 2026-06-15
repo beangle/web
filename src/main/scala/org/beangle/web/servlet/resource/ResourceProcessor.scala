@@ -52,7 +52,7 @@ class ResourceProcessor(private val loader: ResourceLoader) {
   }
 
   protected def getContentType(uri: String, request: HttpServletRequest): String = {
-    val contentType = MediaTypes.get(substringAfterLast(uri, ".")).orNull
+    val contentType = MediaTypes.Defaults.get(substringAfterLast(uri, ".")).orNull
     if (null == contentType) request.getServletContext.getMimeType(uri) else contentType.toString
   }
 }

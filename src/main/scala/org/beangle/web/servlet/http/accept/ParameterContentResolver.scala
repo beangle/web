@@ -27,7 +27,7 @@ class ParameterContentResolver(val parameterName: String) extends ContentTypeRes
     if (null == ext)
       Seq.empty
     else
-      MediaTypes.get(ext) match {
+      MediaTypes.Defaults.get(ext) match {
         case Some(mimeType) => List(mimeType)
         case None => Seq.empty
       }

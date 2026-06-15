@@ -27,10 +27,10 @@ class PathExtensionContentResolver extends ContentTypeResolver {
   def resolve(request: HttpServletRequest): Seq[MediaType] = {
     val servletPath = RequestUtils.getServletPath(request)
     val ext = Strings.substringAfterLast(servletPath, ".")
-    if (ext.length == 0)
+    if (ext.isEmpty)
       Seq.empty
     else
-      MediaTypes.get(ext) match {
+      MediaTypes.Defaults.get(ext) match {
         case Some(mimeType) => List(mimeType)
         case None => Seq.empty
       }

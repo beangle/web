@@ -18,7 +18,6 @@
 package org.beangle.web.servlet.init
 
 import jakarta.servlet.{ ServletContextEvent, ServletContextListener }
-import org.beangle.web.servlet.context.ServletContextHolder
 
 /** Web BootstrapListener
  *
@@ -42,18 +41,22 @@ class BootstrapListener extends ServletContextListener {
 
   var bootstrap: BootstrapInitializer = _
 
-  override def contextInitialized(sce: ServletContextEvent): Unit =
-    if (null == ServletContextHolder.context) {
+  override def contextInitialized(sce: ServletContextEvent): Unit = {
+    val ctx = sce.getServletContext
+    if (null == ctx.getAttribute(BootstrapInitializer.BootstrapKey)) {
       bootstrap = new BootstrapInitializer(false)
-      bootstrap.onStartup(null, sce.getServletContext)
+      bootstrap.onStartup(null, ctx)
       bootstrap.listeners foreach { l =>
         l.contextInitialized(sce)
       }
     }
+    ctx.removeAttribute(BootstrapInitializer.BootstrapKey)
+  }
 
   override def contextDestroyed(sce: ServletContextEvent): Unit =
-    if (null != bootstrap)
+    if (null != bootstrap) {
       bootstrap.listeners foreach { l =>
         l.contextDestroyed(sce)
       }
+    }
 }

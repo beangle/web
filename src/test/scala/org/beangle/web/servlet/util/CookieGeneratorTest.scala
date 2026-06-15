@@ -27,36 +27,55 @@ class CookieGeneratorTest extends AnyFunSpec with Matchers {
       val g = new CookieGenerator("sid")
       g.base = "localhost:9080/myApp"
       g.domain should be("localhost")
-      g.path should be("/myApp")
       g.port should be(9080)
-      g.base should be("http://localhost:9080/myApp")
+      g.base should be("http://localhost:9080")
     }
 
     it("set simple base") {
       val g = new CookieGenerator("sid")
       g.base = "jwxt.openurp.edu.cn"
       g.domain should be("jwxt.openurp.edu.cn")
-      g.path should be("/")
       g.port should be(80)
-      g.base should be("http://jwxt.openurp.edu.cn/")
+      g.base should be("http://jwxt.openurp.edu.cn")
     }
 
     it("set simple https base with path") {
       val g = new CookieGenerator("sid")
       g.base = "https://localhost/a"
       g.domain should be("localhost")
-      g.path should be("/a")
       g.port should be(443)
-      g.base should be("https://localhost/a")
+      g.base should be("https://localhost")
     }
 
     it("set simple https base with path and port") {
       val g = new CookieGenerator("sid")
       g.base = "https://localhost:9443/"
       g.domain should be("localhost")
-      g.path should be("/")
       g.port should be(9443)
-      g.base should be("https://localhost:9443/")
+      g.base should be("https://localhost:9443")
+    }
+  }
+
+  describe("base with somedomain.org") {
+    case class BaseCase(input: String, domain: String, secure: Boolean, port: Int, output: String)
+
+    val cases = Seq(
+      BaseCase("http://somedomain.org/aa", "somedomain.org", secure = false, 80, "http://somedomain.org"),
+      BaseCase("http://somedomain.org", "somedomain.org", secure = false, 80, "http://somedomain.org"),
+      BaseCase("somedomain.org", "somedomain.org", secure = false, 80, "http://somedomain.org"),
+      BaseCase("https://somedomain.org/aa", "somedomain.org", secure = true, 443, "https://somedomain.org"),
+      BaseCase("https://somedomain.org", "somedomain.org", secure = true, 443, "https://somedomain.org"),
+    )
+
+    cases.foreach { c =>
+      it(s"set base from ${c.input}") {
+        val g = new CookieGenerator("sid")
+        g.base = c.input
+        g.domain should be(c.domain)
+        g.secure should be(c.secure)
+        g.port should be(c.port)
+        g.base should be(c.output)
+      }
     }
   }
 }

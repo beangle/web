@@ -26,14 +26,13 @@ import org.beangle.web.servlet.url.UrlBuilder
  */
 class CookieGenerator(val name: String) {
   var domain: String = _
-  var path: String = _
   var secure: Boolean = _
   var httpOnly: Boolean = true
   var maxAge: Int = -1
   var port: Int = 80
 
-  def addCookie(request: HttpServletRequest, response: HttpServletResponse, value: String): Unit = {
-    val cookie = createCookie(request, value)
+  def addCookie(request: HttpServletRequest, response: HttpServletResponse, path: String, value: String): Unit = {
+    val cookie = createCookie(request, path, value)
     cookie.setMaxAge(maxAge)
     if secure then
       cookie.setSecure(true)
@@ -44,13 +43,13 @@ class CookieGenerator(val name: String) {
     response.addCookie(cookie)
   }
 
-  def removeCookie(request: HttpServletRequest, response: HttpServletResponse): Unit = {
-    val cookie = createCookie(request, "")
+  def removeCookie(request: HttpServletRequest, response: HttpServletResponse, path: String): Unit = {
+    val cookie = createCookie(request, path, "")
     cookie.setMaxAge(0)
     response.addCookie(cookie);
   }
 
-  protected def createCookie(request: HttpServletRequest, value: String): Cookie = {
+  protected def createCookie(request: HttpServletRequest, path: String, value: String): Cookie = {
     val cookie = new Cookie(name, value);
     if (domain != null && request.getServerName != domain)
       cookie.setDomain(domain)
@@ -66,10 +65,7 @@ class CookieGenerator(val name: String) {
     } else
       b = Strings.replace(b, "http://", "")
     val pathIdx = b.indexOf('/')
-    if (-1 == pathIdx)
-      this.path = "/"
-    else {
-      this.path = b.substring(pathIdx)
+    if (pathIdx > 0) {
       b = b.substring(0, pathIdx)
     }
     val portIdx = b.indexOf(':')
@@ -85,7 +81,6 @@ class CookieGenerator(val name: String) {
 
   def base: String = {
     val b = new UrlBuilder("")
-    b.setServletPath(this.path)
     b.setServerName(domain)
     b.setPort(port)
     b.setScheme(if (secure) "https" else "http")

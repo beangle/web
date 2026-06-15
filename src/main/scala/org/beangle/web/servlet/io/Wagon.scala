@@ -42,7 +42,7 @@ object Wagon {
   def setContentHeader(response: HttpServletResponse, attach: String): Unit = {
     var contentType = response.getContentType
     if (null == contentType) {
-      contentType = MediaTypes.get(Strings.substringAfterLast(attach, "."), MediaTypes.stream).toString
+      contentType = MediaTypes.Defaults.getOrElse(Strings.substringAfterLast(attach, "."), MediaTypes.stream).toString
       response.setContentType(contentType)
     }
     RequestUtils.setContentDisposition(response, attach)

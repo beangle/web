@@ -21,14 +21,14 @@ import jakarta.servlet.DispatcherType.REQUEST
 import jakarta.servlet.{ServletContainerInitializer, ServletContext, ServletContextListener}
 import org.beangle.commons.collection.Collections
 import org.beangle.commons.config.XmlConfigs
-import org.beangle.commons.io.IOs
-import org.beangle.commons.lang.ClassLoaders
 import org.beangle.commons.lang.Strings.{split, substringAfter, substringBefore}
 import org.beangle.commons.lang.reflect.Reflections
-import org.beangle.web.servlet.context.ServletContextHolder
 
-import java.net.URL
 import java.util as ju
+
+object BootstrapInitializer {
+  val BootstrapKey = "org.beangle.web.servlet.init.BootstrapInitializer"
+}
 
 /**
  * Web BootstrapListener
@@ -47,12 +47,15 @@ class BootstrapInitializer extends ServletContainerInitializer {
   }
 
   override def onStartup(clazzes: ju.Set[Class[_]], ctx: ServletContext): Unit = {
-    if (null != ServletContextHolder.context) {
+    if (null != ctx.getAttribute(BootstrapInitializer.BootstrapKey)) {
       ctx.log("Bootstrap has executed,aborted")
     } else {
-      ServletContextHolder.store(ctx)
+      ctx.setAttribute(BootstrapInitializer.BootstrapKey, java.lang.Boolean.TRUE)
       val inits = Collections.newBuffer[Initializer]
-      val doc = XmlConfigs.load("classpath*:beangle.xml")
+
+      val configs = new XmlConfigs
+      ctx.setAttribute(XmlConfigs.GlobalConfigKey, configs)
+      val doc = configs.load("classpath*:beangle.xml")
       (doc \ "web" \ "initializer") foreach { i =>
         inits.addOne(Reflections.newInstance[Initializer]((i \ "@class").text))
       }

@@ -73,7 +73,6 @@ object UrlBuilder {
   }
 }
 
-
 /**
  * @author chaostone
  */

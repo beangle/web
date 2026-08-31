@@ -1,30 +1,29 @@
 import org.beangle.parent.Dependencies.*
 import org.beangle.parent.Settings.*
-import sbt.url
 
-ThisBuild / organization := "org.beangle.web"
-ThisBuild / version := "0.7.9-SNAPSHOT"
+organization := "org.beangle.web"
+version := "0.7.9-SNAPSHOT"
 
-ThisBuild / scmInfo := Some(
+scmInfo := Some(
   ScmInfo(
-    url("https://github.com/beangle/web"),
+    uri("https://github.com/beangle/web"),
     "scm:git@github.com:beangle/web.git"
   )
 )
 
-ThisBuild / developers := List(
+developers := List(
   Developer(
     id = "chaostone",
     name = "Tihua Duan",
     email = "duantihua@gmail.com",
-    url = url("http://github.com/duantihua")
+    url = uri("http://github.com/duantihua")
   )
 )
 
-ThisBuild / description := "The Beangle Web Library"
-ThisBuild / homepage := Some(url("http://beangle.github.io/web/index.html"))
+description := "The Beangle Web Library"
+homepage := Some(uri("http://beangle.github.io/web/index.html"))
 
-val beangle_commons = "org.beangle.commons" % "beangle-commons" % "6.2.0"
+val beangle_commons = "org.beangle.commons" % "beangle-commons" % "6.3.0"
 
 lazy val root = (project in file("."))
   .settings(

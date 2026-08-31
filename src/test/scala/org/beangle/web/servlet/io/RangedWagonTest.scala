@@ -17,7 +17,7 @@
 
 package org.beangle.web.servlet.io
 
-import java.io.{ ByteArrayOutputStream, File, OutputStream }
+import java.io.{ ByteArrayOutputStream, OutputStream }
 
 import org.beangle.commons.lang.ClassLoaders
 
@@ -50,7 +50,7 @@ class RangedWagonTest extends AnyFunSpec with Matchers {
       val testDoc = ClassLoaders.getResource("download.txt").get
       wagon.copy(testDoc, request, response)
       verify(response).setHeader("Accept-Ranges", "bytes")
-      val file = new File(testDoc.toURI())
+      val length = testDoc.openConnection().getContentLengthLong()
       request = mock(classOf[HttpServletRequest])
       response = mock(classOf[HttpServletResponse])
       when(response.getOutputStream).thenReturn(new ServletOutputStream() {
@@ -68,7 +68,7 @@ class RangedWagonTest extends AnyFunSpec with Matchers {
       when(request.getHeader("Range")).thenReturn("bytes=5-12")
       wagon.copy(testDoc, request, response)
       verify(response).setStatus(206)
-      verify(response).setHeader("Content-Range", "bytes 5-12/" + file.length)
+      verify(response).setHeader("Content-Range", "bytes 5-12/" + length)
     }
   }
 }

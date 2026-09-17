@@ -19,7 +19,7 @@ package org.beangle.web.servlet.util
 
 import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 import org.beangle.commons.collection.Collections
-import org.beangle.commons.lang.{Charsets, Strings}
+import org.beangle.commons.lang.{Charsets, Numbers, Strings}
 import org.beangle.web.servlet.http.agent.*
 
 import java.net.URLEncoder
@@ -28,6 +28,7 @@ object RequestUtils {
 
   private val XForwardedFor = "x-forwarded-for"
   private val XForwardedProto = "X-Forwarded-Proto"
+  private val XForwardedHost = "X-Forwarded-Host"
   private val XForwardedPort = "X-Forwarded-Port"
   private val XRequestedWith = "x-requested-with"
 
@@ -117,6 +118,46 @@ object RequestUtils {
   def getServerPort(req: HttpServletRequest): Int = {
     val headPort = req.getHeader(XForwardedPort)
     if Strings.isEmpty(headPort) then req.getServerPort else Integer.parseInt(headPort)
+  }
+
+  /** 请求自身的 origin，形如 `scheme://host[:port]`，默认端口（http 80 / https 443）省略。
+   *
+   * 与浏览器 `Origin` 头同构，可直接与之比较，用于同源/CORS 判定。
+   *
+   * 反向代理场景取浏览器看到的那一侧：协议与端口交给 `isHttps` / `getServerPort`（已处理
+   * `X-Forwarded-Proto` / `X-Forwarded-Port`），主机优先 `X-Forwarded-Host`——主机名没有等价的
+   * `getServerName` 处理，而容器默认不解析 `X-Forwarded-Host`，不能用 `req.getServerName` 代替。
+   * `X-Forwarded-Host` 是否自带端口取决于代理配置（nginx `$host` 不带、`$http_host` 带），
+   * 自带端口时优先于 `X-Forwarded-Port`，与 Undertow `ProxyPeerAddressHandler` 保持一致。
+   */
+  def getOrigin(req: HttpServletRequest): String = {
+    val scheme = if (isHttps(req)) "https" else "http"
+    val forwardedHost = req.getHeader(XForwardedHost)
+    val hostPort = if (Strings.isNotBlank(forwardedHost)) forwardedHost.trim else req.getServerName
+    val (host, hostPortValue) = splitHostPort(hostPort)
+    // 端口优先级：Host 自带端口 > X-Forwarded-Port > getServerPort()（后者已处理 X-Forwarded-Port）
+    val port = if (hostPortValue > 0) hostPortValue else getServerPort(req)
+    val sb = new StringBuilder
+    sb.append(scheme).append("://").append(host)
+    if (port > 0 && port != (if (scheme == "https") 443 else 80)) sb.append(':').append(port)
+    sb.toString
+  }
+
+  /** 拆分 `host[:port]`，IPv6 字面量（`[::1]:8080`）保留方括号；无端口时返回 -1。 */
+  private def splitHostPort(hostPort: String): (String, Int) = {
+    val value = hostPort.trim
+    if (value.startsWith("[")) {
+      val close = value.indexOf(']')
+      if (close < 0) (value, -1)
+      else {
+        val portText = value.substring(close + 1).stripPrefix(":")
+        (value.substring(0, close + 1), if (portText.isEmpty) -1 else Numbers.toInt(portText, -1))
+      }
+    } else {
+      val colon = value.lastIndexOf(':')
+      if (colon < 0 || colon != value.indexOf(':')) (value, -1)
+      else (value.substring(0, colon), Numbers.toInt(value.substring(colon + 1), -1))
+    }
   }
 
   def isAjax(request: HttpServletRequest): Boolean = {

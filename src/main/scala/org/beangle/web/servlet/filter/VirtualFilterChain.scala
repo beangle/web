@@ -24,7 +24,7 @@ import jakarta.servlet.{Filter, FilterChain, ServletRequest, ServletResponse}
  * {@link FilterChain# doFilter ( jakarta.servlet.ServletRequest, jakarta.servlet.ServletResponse)} is
  * called.
  */
-class VirtualFilterChain(val originalChain: FilterChain, val filterIter: Iterator[_ <: Filter]) extends FilterChain {
+class VirtualFilterChain(val originalChain: FilterChain, val filterIter: Iterator[? <: Filter]) extends FilterChain {
 
   def doFilter(request: ServletRequest, response: ServletResponse): Unit = {
     if filterIter.hasNext then

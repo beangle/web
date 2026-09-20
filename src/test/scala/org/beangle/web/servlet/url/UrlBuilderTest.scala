@@ -33,18 +33,18 @@ class UrlBuilderTest extends AnyFunSpec with Matchers {
       builder.setScheme("http").setServerName("localhost").setPort(80)
       builder.setRequestURI("/demo/security/user")
       builder.setQueryString("name=1&fullname=join")
-      builder.buildUrl() should be equals ("http://localhost/demo/security/user?name=1&fullname=join")
+      builder.buildUrl() should be `equals` ("http://localhost/demo/security/user?name=1&fullname=join")
       builder.setRequestURI(null).setPort(8080).setServletPath("/security")
-      builder.buildUrl() should be equals ("http://localhost:8080/security?name=1&fullname=join")
+      builder.buildUrl() should be `equals` ("http://localhost:8080/security?name=1&fullname=join")
     }
 
     it("build simple url") {
       val builder = new UrlBuilder("/")
       builder.setServletPath("/security/user")
       builder.setQueryString("name=1&fullname=join")
-      builder.buildRequestUrl() should be equals ("/security/user?name=1&fullname=join")
+      builder.buildRequestUrl() should be `equals` ("/security/user?name=1&fullname=join")
       builder.setRequestURI("/demo/security/user")
-      builder.buildRequestUrl() should be equals ("/security/user?name=1&fullname=join")
+      builder.buildRequestUrl() should be `equals` ("/security/user?name=1&fullname=join")
     }
     it("encodeURI") {
       val uri = "http://localhost/sastask/call/sues?commands=/home/openurp/task/new_occupy.sh 2024-2025 1 131070 6-1,6-2 航飞楼6213-6215 2024-09-02"

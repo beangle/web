@@ -20,13 +20,14 @@ package org.beangle.web.servlet.util
 import jakarta.servlet.http.{Cookie, HttpServletRequest, HttpServletResponse}
 import org.beangle.commons.lang.Strings
 import org.beangle.web.servlet.url.UrlBuilder
+import scala.compiletime.uninitialized
 
 /**
  * @author chaostone
  */
 class CookieGenerator(val name: String) {
-  var domain: String = _
-  var secure: Boolean = _
+  var domain: String = uninitialized
+  var secure: Boolean = uninitialized
   var httpOnly: Boolean = true
   var maxAge: Int = -1
   var port: Int = 80

@@ -25,7 +25,7 @@ abstract class SocketInitializer extends Initializer, ServletContextListener {
 
   def getConfigs(): Iterable[ServerEndpointConfig] = Set.empty
 
-  def getPojoEndPointClasses(): Iterable[Class[_]] = Set.empty
+  def getPojoEndPointClasses(): Iterable[Class[?]] = Set.empty
 
   private var registed: Boolean = false
 

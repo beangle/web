@@ -18,6 +18,7 @@
 package org.beangle.web.servlet.init
 
 import jakarta.servlet.{ ServletContextEvent, ServletContextListener }
+import scala.compiletime.uninitialized
 
 /** Web BootstrapListener
  *
@@ -39,7 +40,7 @@ import jakarta.servlet.{ ServletContextEvent, ServletContextListener }
  */
 class BootstrapListener extends ServletContextListener {
 
-  var bootstrap: BootstrapInitializer = _
+  var bootstrap: BootstrapInitializer = uninitialized
 
   override def contextInitialized(sce: ServletContextEvent): Unit = {
     val ctx = sce.getServletContext

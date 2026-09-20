@@ -46,7 +46,7 @@ class BootstrapInitializer extends ServletContainerInitializer {
     register = r
   }
 
-  override def onStartup(clazzes: ju.Set[Class[_]], ctx: ServletContext): Unit = {
+  override def onStartup(clazzes: ju.Set[Class[?]], ctx: ServletContext): Unit = {
     if (null != ctx.getAttribute(BootstrapInitializer.BootstrapKey)) {
       ctx.log("Bootstrap has executed,aborted")
     } else {

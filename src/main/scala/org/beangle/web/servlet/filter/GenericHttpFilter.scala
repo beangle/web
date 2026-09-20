@@ -22,13 +22,14 @@ import org.beangle.commons.bean.{Initializing, Properties}
 import org.beangle.commons.lang.Strings
 
 import scala.collection.mutable
+import scala.compiletime.uninitialized
 
 /**
  * @author chaostone
  */
 abstract class GenericHttpFilter extends Filter with Initializing {
 
-  private[this] var filterConfig: FilterConfig = _
+  private var filterConfig: FilterConfig = uninitialized
 
   /**
    * Standard way of initializing this filter. Map config parameters onto bean

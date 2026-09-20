@@ -25,7 +25,7 @@ abstract class GenericCompositeFilter extends GenericHttpFilter {
   override def doFilter(request: ServletRequest, response: ServletResponse, chain: FilterChain): Unit =
     new VirtualFilterChain(chain, getFilters(request).iterator).doFilter(request, response)
 
-  def getFilters(request: ServletRequest): List[_ <: Filter]
+  def getFilters(request: ServletRequest): List[? <: Filter]
 }
 
 object MatchedCompositeFilter {

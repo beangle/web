@@ -19,6 +19,7 @@ package org.beangle.web.servlet.filter
 
 import jakarta.servlet.ServletException
 import jakarta.servlet.ServletRequest
+import scala.compiletime.uninitialized
 
 /**
  * Once per request filter.
@@ -28,7 +29,7 @@ import jakarta.servlet.ServletRequest
  */
 abstract class OncePerRequestFilter extends GenericHttpFilter {
 
-  var attributeName: String = _
+  var attributeName: String = uninitialized
 
   def isFirstEnter(request: ServletRequest): Boolean =
     if (null != request.getAttribute(attributeName)) false else {

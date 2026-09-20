@@ -18,13 +18,14 @@
 package org.beangle.web.servlet.init
 
 import jakarta.servlet.{ServletContext, ServletContextListener, ServletException}
+import scala.compiletime.uninitialized
 
 /** Web初始化接口
  *
  * @see BootstrapListener.InitFile
  */
 trait Initializer {
-  var boss: BootstrapInitializer = _
+  var boss: BootstrapInitializer = uninitialized
 
   /** 配置web上下文
    *

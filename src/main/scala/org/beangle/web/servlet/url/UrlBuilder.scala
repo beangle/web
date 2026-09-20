@@ -22,6 +22,7 @@ import org.beangle.commons.lang.Strings
 import org.beangle.web.servlet.util.RequestUtils
 
 import java.net.URLEncoder
+import scala.compiletime.uninitialized
 
 object UrlBuilder {
   val separator = "&"
@@ -78,21 +79,21 @@ object UrlBuilder {
  */
 class UrlBuilder(cxtPath: String) {
 
-  var scheme: String = _
+  var scheme: String = uninitialized
 
-  var serverName: String = _
+  var serverName: String = uninitialized
 
-  var port: Int = _
+  var port: Int = uninitialized
 
   var contextPath: String = if (cxtPath == "/") "" else cxtPath
 
-  var servletPath: String = _
+  var servletPath: String = uninitialized
 
-  var requestURI: String = _
+  var requestURI: String = uninitialized
 
-  var pathInfo: String = _
+  var pathInfo: String = uninitialized
 
-  var queryString: String = _
+  var queryString: String = uninitialized
 
   /**
    * Returns servetPath without contextPath

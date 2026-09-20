@@ -18,13 +18,14 @@
 package org.beangle.web.servlet.http.accept
 
 import org.beangle.commons.bean.{Factory, Initializing}
+import scala.compiletime.uninitialized
 
 class ContentNegotiationManagerFactory extends Factory[ContentNegotiationManager], Initializing {
 
-  var favorParameter: Boolean = _
-  var favorPathExtension: Boolean = _
-  var ignoreAcceptHeader: Boolean = _
-  var parameterName: String = _
+  var favorParameter: Boolean = uninitialized
+  var favorPathExtension: Boolean = uninitialized
+  var ignoreAcceptHeader: Boolean = uninitialized
+  var parameterName: String = uninitialized
   private var result: ContentNegotiationManager = null
 
   override def init(): Unit = {

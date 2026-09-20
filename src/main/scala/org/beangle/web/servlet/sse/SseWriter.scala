@@ -22,6 +22,7 @@ import org.beangle.commons.concurrent.Locks
 
 import java.io.IOException
 import java.util.concurrent.locks.ReentrantLock
+import scala.compiletime.uninitialized
 
 /**
  * SSE 写出器；不负责请求超时。在异步 Servlet 中应在 [[jakarta.servlet.AsyncContext]] 上
@@ -32,7 +33,7 @@ class SseWriter(resp: HttpServletResponse) {
   private var completionCallback: Option[() => Unit] = None
   private var errorCallback: Option[Throwable => Unit] = None
   private var completed: Boolean = false
-  private var error: Throwable = _
+  private var error: Throwable = uninitialized
   private val lock = new ReentrantLock()
 
   def onCompletion(callback: () => Unit): Unit = {

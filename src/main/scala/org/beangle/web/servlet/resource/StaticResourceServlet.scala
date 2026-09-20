@@ -23,10 +23,11 @@ import org.beangle.web.servlet.resource.filter.HeaderFilter
 
 import jakarta.servlet.ServletConfig
 import jakarta.servlet.http.{ HttpServlet, HttpServletRequest, HttpServletResponse }
+import scala.compiletime.uninitialized
 
 class StaticResourceServlet extends HttpServlet {
 
-  var processor: ResourceProcessor = _
+  var processor: ResourceProcessor = uninitialized
 
   override def init(config: ServletConfig): Unit =
     buildProcessor()
